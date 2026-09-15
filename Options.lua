@@ -193,6 +193,7 @@ function ns.InitOptions()
         end)
     end
 
+    AddCheckbox("dismount", L.OPT_DISMOUNT, L.OPT_DISMOUNT_DESC)
     AddCheckbox("forceSound", L.OPT_SOUND, L.OPT_SOUND_DESC)
     AddSlider("noWaterLock", L.OPT_LOCK, L.OPT_LOCK_DESC, LOCK_MIN, LOCK_MAX, LOCK_STEP, L.SECONDS)
     AddCheckbox("showMinimapButton", L.OPT_MINIMAP, L.OPT_MINIMAP_DESC)

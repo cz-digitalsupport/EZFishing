@@ -32,6 +32,8 @@ ns.defaults = {
     triggerMode = 1,
     -- Eigene Taste im WoW-Format, z. B. "1", "SHIFT-F" oder "BUTTON4"
     actionKey = nil,
+    -- Aufgesessen: per Auslösung absitzen statt auszuwerfen
+    dismount = false,
 }
 
 ns.TRIGGER_DOUBLECLICK = 1
@@ -98,8 +100,11 @@ local function ClearCastBinding()
 end
 
 castButton:SetScript("PostClick", function(self)
-    if self:GetAttribute("type") == "spell" then
+    local actionType = self:GetAttribute("type")
+    if actionType == "spell" then
         Debug("Angel ausgeworfen")
+    elseif actionType == "macro" then
+        Debug("Abgesessen")
     end
     ClearCastBinding()
 end)
@@ -305,8 +310,13 @@ local function CanStartFishing(skipMouseChecks)
         Debug("Nicht ausgeworfen: in Bewegung")
         return false
     end
-    -- Nicht auswerfen, wenn der Cast absitzen bzw. die Gestalt aufheben würde
-    if IsMounted() or UnitInVehicle("player") then
+    -- Nicht auswerfen, wenn der Cast die Gestalt aufheben würde. Mit der Option
+    -- "Per Auslösung absitzen" wird aufgesessen stattdessen abgesessen.
+    if UnitInVehicle("player") then
+        Debug("Nicht ausgeworfen: in einem Fahrzeug")
+        return false
+    end
+    if IsMounted() and not EZFishingDB.dismount then
         Debug("Nicht ausgeworfen: aufgesessen")
         return false
     end
@@ -326,7 +336,15 @@ castButton:SetScript("PreClick", function(self, _, down)
         self:SetAttribute("type", nil)
         return
     end
-    self:SetAttribute("type", CanStartFishing(true) and "spell" or nil)
+    if not CanStartFishing(true) then
+        self:SetAttribute("type", nil)
+    elseif IsMounted() and EZFishingDB.dismount then
+        -- Absitzen über ein Makro, damit es auch geschützt zuverlässig funktioniert
+        self:SetAttribute("type", "macro")
+        self:SetAttribute("macrotext", "/dismount")
+    else
+        self:SetAttribute("type", "spell")
+    end
 end)
 
 ---------------------------------------------------------------------------
