@@ -1,0 +1,23 @@
+## Interface: 120100, 120105
+## Title: EZFishing
+## Notes: Cast and reel in your fishing rod with a double right-click.
+## Notes-deDE: Angel per Doppel-Rechtsklick auswerfen und einholen.
+## Notes-frFR: Lancez et ramenez votre canne à pêche par un double clic droit.
+## Notes-esES: Lanza y recoge tu caña de pescar con un doble clic derecho.
+## Notes-esMX: Lanza y recoge tu caña de pescar con un doble clic derecho.
+## Notes-itIT: Lancia e recupera la canna da pesca con un doppio clic destro.
+## Notes-ptBR: Lance e recolha sua vara de pescar com um clique duplo direito.
+## Notes-ruRU: Забрасывайте и подсекайте удочку двойным щелчком правой кнопки мыши.
+## Notes-koKR: 오른쪽 더블 클릭으로 낚싯대를 던지고 건집니다.
+## Notes-zhCN: 右键双击即可抛竿和收竿。
+## Notes-zhTW: 右鍵雙擊即可拋竿和收竿。
+## Author: Christopher Zeh
+## Version: 0.2.0
+## SavedVariables: EZFishingDB
+## Category: Professions
+## IconTexture: Interface\Icons\Trade_Fishing
+
+Locales.lua
+Core.lua
+Options.lua
+Minimap.lua
