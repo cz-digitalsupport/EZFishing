@@ -16,6 +16,7 @@
 ## SavedVariables: EZFishingDB
 ## Category: Professions
 ## IconTexture: Interface\Icons\Trade_Fishing
+## X-Curse-Project-ID: 1697760
 
 Locales.lua
 Core.lua

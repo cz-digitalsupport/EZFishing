@@ -1,0 +1,9 @@
+package-as: EZFishing
+
+enable-nolib-creation: no
+
+ignore:
+  - .github
+  - .gitattributes
+  - .pkgmeta
+  - README.md
