@@ -18,8 +18,7 @@ jobs:
 
       - name: Package and attach to release
         uses: BigWigsMods/packager@master
-        with:
-          # -d: kein Upload zu CurseForge/WoWInterface/Wago
-          args: -d
         env:
+          # Nur GITHUB_OAUTH gesetzt -> Zip landet am GitHub-Release.
+          # CurseForge/WoWInterface/Wago werden mangels Token automatisch uebersprungen.
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
