@@ -1,4 +1,4 @@
-## Interface: 120100, 120105
+## Interface: 120105
 ## Title: EZFishing
 ## Notes: Cast and reel in your fishing rod with a double right-click.
 ## Notes-deDE: Angel per Doppel-Rechtsklick auswerfen und einholen.
