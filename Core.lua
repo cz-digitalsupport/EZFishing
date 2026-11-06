@@ -1,8 +1,11 @@
 local ADDON_NAME, ns = ...
 local L = ns.L
 
--- Spell-ID von "Angeln" (sprachunabhängig)
-local FISHING_SPELL_ID = 131474
+-- Spell-IDs von "Angeln" (sprachunabhängig), in Prüfreihenfolge:
+-- Retail nutzt 131474, Classic-Clients (z. B. WoW Forever) die Ränge
+-- Großmeister/Fachmann/Experte/Geselle/Lehrling. Die erste bekannte ID gewinnt.
+local FISHING_CAST_IDS = { 131474, 18248, 7732, 7731, 7620 }
+local FISHING_SPELL_ID = FISHING_CAST_IDS[1] -- wird beim Login aufgelöst
 -- Der Kanal-Zauber beim Angeln kann eine andere ID haben als der Wurf selbst
 local FISHING_SPELL_IDS = {
     [131474] = true, [131476] = true, [131490] = true,
@@ -93,6 +96,29 @@ castButton:SetAttribute("spell", FISHING_SPELL_ID)
 castButton:RegisterForClicks("AnyUp", "AnyDown")
 castButton:Hide()
 
+local function KnowsSpell(spellID)
+    if IsPlayerSpell and IsPlayerSpell(spellID) then return true end
+    if IsSpellKnown and IsSpellKnown(spellID) then return true end
+    return false
+end
+
+-- Bekannte Angel-ID ermitteln und am Secure Button hinterlegen
+local function ResolveFishingSpell()
+    local found
+    for _, spellID in ipairs(FISHING_CAST_IDS) do
+        if KnowsSpell(spellID) then
+            found = spellID
+            break
+        end
+    end
+    if not found or InCombatLockdown() then return end
+    if found ~= FISHING_SPELL_ID or castButton:GetAttribute("spell") ~= found then
+        FISHING_SPELL_ID = found
+        castButton:SetAttribute("spell", found)
+        Debug("Angel-Zauber: ID " .. found)
+    end
+end
+
 local function ClearCastBinding()
     if not bindingActive or InCombatLockdown() then return end
     ClearOverrideBindings(castButton)
@@ -135,12 +161,18 @@ end
 local function ApplySoftInteractCVars()
     EZFishingDB.savedCVars = EZFishingDB.savedCVars or {}
     for name, value in pairs(GetSoftInteractCVars()) do
-        -- Originalwert nur einmal merken, damit wir nicht unsere eigenen Werte sichern
-        if EZFishingDB.savedCVars[name] == nil then
-            EZFishingDB.savedCVars[name] = GetCVar(name)
-        end
-        if GetCVar(name) ~= value then
-            SetCVar(name, value)
+        local current = GetCVar(name)
+        if current == nil then
+            -- CVar gibt es auf diesem Client nicht: überspringen statt Fehler
+            Debug("CVar fehlt: " .. name)
+        else
+            -- Originalwert nur einmal merken, damit wir nicht unsere eigenen Werte sichern
+            if EZFishingDB.savedCVars[name] == nil then
+                EZFishingDB.savedCVars[name] = current
+            end
+            if current ~= value then
+                SetCVar(name, value)
+            end
         end
     end
 end
@@ -241,16 +273,22 @@ end
 ---------------------------------------------------------------------------
 -- Prüfungen
 ---------------------------------------------------------------------------
+local function GetSpellName(spellID)
+    if C_Spell and C_Spell.GetSpellInfo then
+        local info = C_Spell.GetSpellInfo(spellID)
+        return info and info.name
+    end
+    return GetSpellInfo and (GetSpellInfo(spellID))
+end
+
 -- Per ID-Liste und zusätzlich per (lokalisiertem) Zaubernamen erkennen
 local function IsFishingSpell(spellID, spellName)
     if spellID and FISHING_SPELL_IDS[spellID] then return true end
-    local info = C_Spell.GetSpellInfo(FISHING_SPELL_ID)
-    local fishingName = info and info.name
+    local fishingName = GetSpellName(FISHING_SPELL_ID)
     if not fishingName then return false end
     if spellName and spellName == fishingName then return true end
     if spellID then
-        local channelInfo = C_Spell.GetSpellInfo(spellID)
-        return channelInfo ~= nil and channelInfo.name == fishingName
+        return GetSpellName(spellID) == fishingName
     end
     return false
 end
@@ -290,7 +328,10 @@ local function CanStartFishing(skipMouseChecks)
     end
     -- Nur außerhalb des Kampfes (UnitAffectingCombat greift auch kurz vor dem Lockdown)
     if InCombatLockdown() or UnitAffectingCombat("player") then return false end
-    if not IsPlayerSpell(FISHING_SPELL_ID) then return false end
+    if not KnowsSpell(FISHING_SPELL_ID) then
+        Debug("Nicht ausgeworfen: Angeln nicht erlernt (ID " .. FISHING_SPELL_ID .. ")")
+        return false
+    end
     if not skipMouseChecks then
         -- Rechtsklick auf NPCs/Spieler (inkl. Questgeber) nicht abfangen
         if UnitExists("mouseover") then
@@ -436,6 +477,7 @@ eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 eventFrame:RegisterEvent("UI_ERROR_MESSAGE")
+eventFrame:RegisterEvent("SPELLS_CHANGED")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
 
@@ -450,7 +492,11 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         ns.InitOptions()
         ns.InitMinimapButton()
         self:UnregisterEvent("ADDON_LOADED")
+    elseif event == "SPELLS_CHANGED" then
+        -- Neuer Angel-Rang gelernt (Classic) oder Zauberbuch erst jetzt geladen
+        ResolveFishingSpell()
     elseif event == "PLAYER_LOGIN" then
+        ResolveFishingSpell()
         UpdateSoftInteractCVars()
         UpdateKeyBinding()
         -- Übrig gebliebene Toneinstellungen (z. B. nach /reload beim Angeln) zurücksetzen
@@ -488,6 +534,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         pendingKeyUpdate = true
     elseif event == "PLAYER_REGEN_ENABLED" then
         -- Was im Kampf nicht möglich war, jetzt nachholen
+        ResolveFishingSpell()
         ClearCastBinding()
         ClearReelBinding()
         if pendingCVarUpdate then
