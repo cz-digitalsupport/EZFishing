@@ -224,7 +224,82 @@ function ns.InitOptions()
         end
     end
 
+    -- Eigener Zurücksetzen-Button: setzt ausschließlich die EZFishing-Optionen zurück
+    AddHeader(L.OPT_RESET)
+    layout:AddInitializer(CreateSettingsButtonInitializer(L.OPT_RESET, L.OPT_RESET_BUTTON,
+        ns.ConfirmReset, L.OPT_RESET_DESC, true))
+
     Settings.RegisterAddOnCategory(category)
+    ns.HookDefaultsButton()
+end
+
+---------------------------------------------------------------------------
+-- Nur die eigenen Optionen zurücksetzen
+---------------------------------------------------------------------------
+local function ResetOptions()
+    if InCombatLockdown() then
+        ns.Print(L.COMBAT_BLOCKED)
+        return
+    end
+    for key, setting in pairs(ns.settings) do
+        setting:SetValue(ns.defaults[key])
+    end
+    if EZFishingDB.actionKey ~= nil then
+        ns.SetActionKey(nil)
+    end
+    ns.RefreshKeyButton()
+    ns.Print(L.RESET_DONE)
+end
+
+StaticPopupDialogs["EZFISHING_RESET"] = {
+    text = L.RESET_CONFIRM,
+    button1 = OKAY,
+    button2 = CANCEL,
+    OnAccept = ResetOptions,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+}
+
+function ns.ConfirmReset()
+    StaticPopup_Show("EZFISHING_RESET")
+end
+
+---------------------------------------------------------------------------
+-- Blizzards "Standard"-Button auf unserer Seite ausblenden: Er bietet
+-- "Alle Einstellungen" an und würde damit das komplette Spiel-UI zurücksetzen.
+---------------------------------------------------------------------------
+local defaultsHidden = false
+
+local function GetDefaultsButton()
+    local list = SettingsPanel and SettingsPanel.GetSettingsList and SettingsPanel:GetSettingsList()
+    return list and list.Header and list.Header.DefaultsButton
+end
+
+local function UpdateDefaultsButton()
+    local button = GetDefaultsButton()
+    if not button then return end
+    local current = SettingsPanel.GetCurrentCategory and SettingsPanel:GetCurrentCategory()
+    if current and current == ns.settingsCategory then
+        button:Hide()
+        defaultsHidden = true
+    elseif defaultsHidden then
+        -- Auf anderen Seiten wieder so anzeigen, wie Blizzard ihn vorsieht
+        button:Show()
+        defaultsHidden = false
+    end
+end
+
+function ns.HookDefaultsButton()
+    if not SettingsPanel then return end
+    if SettingsPanel.SelectCategory then
+        hooksecurefunc(SettingsPanel, "SelectCategory", UpdateDefaultsButton)
+    end
+    if SettingsPanel.DisplayLayout then
+        hooksecurefunc(SettingsPanel, "DisplayLayout", UpdateDefaultsButton)
+    end
+    SettingsPanel:HookScript("OnShow", UpdateDefaultsButton)
 end
 
 function ns.OpenOptions()
