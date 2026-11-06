@@ -46,6 +46,9 @@ ns.defaults = {
 -- Erlaubter Bereich für den Waffen-Rücktausch (auch vom Optionsmenü genutzt)
 ns.WEAPON_RESTORE_MIN, ns.WEAPON_RESTORE_MAX, ns.WEAPON_RESTORE_STEP = 0, 30, 5
 
+-- Retail oder Classic-Client (WoW Forever meldet eine eigene Projekt-ID)
+ns.IS_RETAIL = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+
 ns.TRIGGER_DOUBLECLICK = 1
 ns.TRIGGER_KEY = 2
 
@@ -587,6 +590,9 @@ function ns.SetActionKey(key)
     if ns.RefreshKeyButton then
         ns.RefreshKeyButton()
     end
+    if ns.RefreshOnboarding then
+        ns.RefreshOnboarding()
+    end
     if key then
         Print(L.KEY_SET:format(GetBindingText(key)))
     else
@@ -646,6 +652,10 @@ eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
 
 eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
+        -- Bestehende Installationen kennen ihre Einstellungen schon: kein Assistent
+        if EZFishingDB and EZFishingDB.onboarded == nil then
+            EZFishingDB.onboarded = true
+        end
         EZFishingDB = EZFishingDB or {}
         for key, value in pairs(ns.defaults) do
             if EZFishingDB[key] == nil then
@@ -672,6 +682,8 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         RestoreFishingSound()
         -- Nach /reload mit angelegter Angel: Rücktausch-Timer neu starten
         ScheduleWeaponRestore()
+        -- Erster Start: Einrichtungsassistent anzeigen
+        ns.ScheduleOnboarding()
     elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
         local spellID = select(2, ...)
         local channelName = UnitChannelInfo("player")
@@ -765,6 +777,8 @@ SlashCmdList.EZFISHING = function(msg)
         else
             Print(L.LOCK_USAGE)
         end
+    elseif cmd == "setup" then
+        ns.ShowOnboarding()
     elseif cmd == "debug" then
         ns.SetOption("debug", not EZFishingDB.debug)
         Print(EZFishingDB.debug and L.DEBUG_ON or L.DEBUG_OFF)

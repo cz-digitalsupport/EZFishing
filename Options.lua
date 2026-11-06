@@ -178,6 +178,8 @@ function ns.InitOptions()
     -- Allgemein
     AddHeader(L.HEADER_GENERAL)
     AddCheckbox("enabled", L.OPT_ENABLED, L.OPT_ENABLED_DESC)
+    layout:AddInitializer(CreateSettingsButtonInitializer(L.OPT_SETUP, L.OPT_SETUP_BUTTON,
+        function() ns.ShowOnboarding() end, L.OPT_SETUP_DESC, true))
 
     -- Auslösung: Doppel-Rechtsklick oder eigene Taste
     local triggerInit = AddDropdown("triggerMode", L.OPT_TRIGGER, L.OPT_TRIGGER_DESC, {

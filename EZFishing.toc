@@ -21,4 +21,5 @@
 Locales.lua
 Core.lua
 Options.lua
+Onboarding.lua
 Minimap.lua
