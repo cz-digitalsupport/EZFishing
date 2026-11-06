@@ -3,6 +3,7 @@ local L = ns.L
 
 local LOCK_MIN, LOCK_MAX, LOCK_STEP = 0, 10, 1
 local RANGE_MIN, RANGE_MAX, RANGE_STEP = 5, 40, 1
+local RESTORE_MIN, RESTORE_MAX, RESTORE_STEP = ns.WEAPON_RESTORE_MIN, ns.WEAPON_RESTORE_MAX, ns.WEAPON_RESTORE_STEP
 
 ---------------------------------------------------------------------------
 -- Fenster zum Festlegen der eigenen Taste
@@ -194,6 +195,12 @@ function ns.InitOptions()
     end
 
     AddCheckbox("dismount", L.OPT_DISMOUNT, L.OPT_DISMOUNT_DESC)
+    local poleInit = AddCheckbox("autoEquipPole", L.OPT_AUTO_POLE, L.OPT_AUTO_POLE_DESC)
+    local restoreInit = AddSlider("weaponRestoreDelay", L.OPT_WEAPON_RESTORE, L.OPT_WEAPON_RESTORE_DESC,
+        RESTORE_MIN, RESTORE_MAX, RESTORE_STEP, L.SECONDS)
+    if restoreInit and restoreInit.SetParentInitializer then
+        restoreInit:SetParentInitializer(poleInit, function() return EZFishingDB.autoEquipPole end)
+    end
     AddCheckbox("forceSound", L.OPT_SOUND, L.OPT_SOUND_DESC)
     AddSlider("noWaterLock", L.OPT_LOCK, L.OPT_LOCK_DESC, LOCK_MIN, LOCK_MAX, LOCK_STEP, L.SECONDS)
     AddCheckbox("showMinimapButton", L.OPT_MINIMAP, L.OPT_MINIMAP_DESC)

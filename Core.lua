@@ -37,7 +37,14 @@ ns.defaults = {
     actionKey = nil,
     -- Aufgesessen: per Auslösung absitzen statt auszuwerfen
     dismount = false,
+    -- Classic-Clients (z. B. WoW Forever): fehlende Angel aus den Taschen anlegen
+    autoEquipPole = true,
+    -- Nach so vielen Sekunden ohne Angeln die vorherigen Waffen wieder anlegen (0 = aus)
+    weaponRestoreDelay = 30,
 }
+
+-- Erlaubter Bereich für den Waffen-Rücktausch (auch vom Optionsmenü genutzt)
+ns.WEAPON_RESTORE_MIN, ns.WEAPON_RESTORE_MAX, ns.WEAPON_RESTORE_STEP = 0, 30, 5
 
 ns.TRIGGER_DOUBLECLICK = 1
 ns.TRIGGER_KEY = 2
@@ -73,7 +80,9 @@ local reelBindingToken = 0
 local pendingCVarUpdate = false
 local pendingKeyUpdate = false
 local soundRestoreToken = 0
+local fishingChannelActive = false -- beim Kanalstart gesetzt, beim Stopp gelöscht
 local UpdateKeyBinding -- weiter unten definiert
+local GetPoleToEquip -- weiter unten definiert
 
 function ns.Print(msg)
     print("|cff33ccffEZFishing|r: " .. msg)
@@ -368,6 +377,144 @@ local function CanStartFishing(skipMouseChecks)
     return true
 end
 
+---------------------------------------------------------------------------
+-- Angel automatisch anlegen (nur Clients, die zum Angeln eine Angel brauchen)
+---------------------------------------------------------------------------
+local MAINHAND_SLOT = INVSLOT_MAINHAND or 16
+local ITEM_CLASS_WEAPON = Enum and Enum.ItemClass and Enum.ItemClass.Weapon or 2
+local WEAPON_FISHING_POLE = Enum and Enum.ItemWeaponSubclass
+    and Enum.ItemWeaponSubclass.Fishingpole or 20
+
+local function IsFishingPole(itemID)
+    if not itemID then return false end
+    local getInfo = C_Item and C_Item.GetItemInfoInstant or GetItemInfoInstant
+    if not getInfo then return false end
+    local _, _, _, _, _, classID, subclassID = getInfo(itemID)
+    return classID == ITEM_CLASS_WEAPON and subclassID == WEAPON_FISHING_POLE
+end
+
+local function GetItemLevel(itemID)
+    local getInfo = C_Item and C_Item.GetItemInfo or GetItemInfo
+    local level = getInfo and select(4, getInfo(itemID))
+    return level or 0
+end
+
+-- Liefert die Item-ID der besten Angel in den Taschen, wenn keine angelegt ist
+function GetPoleToEquip()
+    -- Retail braucht keine Angel zum Angeln
+    if FISHING_SPELL_ID == FISHING_CAST_IDS[1] then return nil end
+    if IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then return nil end
+    local container = C_Container
+    if not (container and container.GetContainerNumSlots and container.GetContainerItemID) then
+        return nil
+    end
+    local bestID, bestLevel
+    for bag = 0, NUM_BAG_SLOTS or 4 do
+        for slot = 1, container.GetContainerNumSlots(bag) do
+            local itemID = container.GetContainerItemID(bag, slot)
+            if IsFishingPole(itemID) then
+                local level = GetItemLevel(itemID)
+                if not bestID or level > bestLevel then
+                    bestID, bestLevel = itemID, level
+                end
+            end
+        end
+    end
+    return bestID
+end
+
+---------------------------------------------------------------------------
+-- Vorherige Waffen merken und nach einer Angelpause wieder anlegen
+---------------------------------------------------------------------------
+local OFFHAND_SLOT = INVSLOT_OFFHAND or 17
+local OFFHAND_DELAY = 0.5 -- Nebenhand erst anlegen, wenn die Haupthand fertig ist
+local weaponRestoreToken = 0
+local pendingWeaponRestore = false
+
+local equipItem = (C_Item and C_Item.EquipItemByName) or EquipItemByName
+
+-- Waffen pro Charakter speichern (EZFishingDB gilt accountweit)
+local function GetCharKey()
+    return (UnitName("player") or "?") .. "-" .. (GetRealmName() or "?")
+end
+
+local function GetSavedWeapons()
+    return EZFishingDB.savedWeapons and EZFishingDB.savedWeapons[GetCharKey()]
+end
+
+local function ClearSavedWeapons()
+    if EZFishingDB.savedWeapons then
+        EZFishingDB.savedWeapons[GetCharKey()] = nil
+        if next(EZFishingDB.savedWeapons) == nil then
+            EZFishingDB.savedWeapons = nil
+        end
+    end
+end
+
+-- Vor dem Anlegen der Angel aufrufen
+local function RememberWeapons()
+    local main = GetInventoryItemLink("player", MAINHAND_SLOT)
+    local off = GetInventoryItemLink("player", OFFHAND_SLOT)
+    if not (main or off) then return end
+    EZFishingDB.savedWeapons = EZFishingDB.savedWeapons or {}
+    EZFishingDB.savedWeapons[GetCharKey()] = { main = main, off = off }
+    Debug("Waffen gemerkt: " .. tostring(main) .. " / " .. tostring(off))
+end
+
+local function RestoreWeapons()
+    local saved = GetSavedWeapons()
+    if not saved or not equipItem then return end
+    if InCombatLockdown() or UnitAffectingCombat("player") then
+        -- Im Kampf darf ein Addon keine Waffen wechseln: nach dem Kampf nachholen
+        pendingWeaponRestore = true
+        return
+    end
+    pendingWeaponRestore = false
+    -- Hat der Spieler die Angel inzwischen selbst abgelegt, nichts anfassen
+    if not IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then
+        Debug("Kein Rücktausch: Angel nicht mehr angelegt")
+        ClearSavedWeapons()
+        return
+    end
+    if UnitIsDeadOrGhost("player") or UnitChannelInfo("player") or UnitCastingInfo("player") then
+        -- Gerade unpassend: nach einer weiteren Pause erneut versuchen
+        -- (neues Angeln erhöht das Token und bricht den Versuch ab)
+        local token = weaponRestoreToken
+        C_Timer.After(5, function()
+            if token == weaponRestoreToken then RestoreWeapons() end
+        end)
+        return
+    end
+    ClearSavedWeapons()
+    if saved.main then
+        equipItem(saved.main, MAINHAND_SLOT)
+    end
+    if saved.off then
+        C_Timer.After(saved.main and OFFHAND_DELAY or 0, function()
+            if not InCombatLockdown() then
+                equipItem(saved.off, OFFHAND_SLOT)
+            end
+        end)
+    end
+    Print(L.WEAPONS_RESTORED)
+end
+
+local function CancelWeaponRestore()
+    weaponRestoreToken = weaponRestoreToken + 1
+end
+
+-- Nach jeder Angelaktivität neu starten
+local function ScheduleWeaponRestore()
+    weaponRestoreToken = weaponRestoreToken + 1
+    local delay = EZFishingDB.weaponRestoreDelay or 0
+    if delay <= 0 or not GetSavedWeapons() then return end
+    Debug(("Waffen-Rücktausch in %d Sek."):format(delay))
+    local token = weaponRestoreToken
+    C_Timer.After(delay, function()
+        if token == weaponRestoreToken then RestoreWeapons() end
+    end)
+end
+
 -- Vor jedem Auslösen erneut prüfen; bei Verbot wird der Klick wirkungslos.
 -- Die Maus-Prüfungen hat der Doppelklick schon beim Drücken erledigt.
 castButton:SetScript("PreClick", function(self, _, down)
@@ -379,13 +526,29 @@ castButton:SetScript("PreClick", function(self, _, down)
     end
     if not CanStartFishing(true) then
         self:SetAttribute("type", nil)
-    elseif IsMounted() and EZFishingDB.dismount then
+        return
+    end
+    if IsMounted() and EZFishingDB.dismount then
         -- Absitzen über ein Makro, damit es auch geschützt zuverlässig funktioniert
         self:SetAttribute("type", "macro")
         self:SetAttribute("macrotext", "/dismount")
-    else
-        self:SetAttribute("type", "spell")
+        return
     end
+    local poleID = EZFishingDB.autoEquipPole and GetPoleToEquip()
+    if poleID then
+        -- Angel anlegen; die nächste Auslösung wirft dann aus
+        -- Bereits gemerkte Waffen nicht mit einer anderen Zwischenlösung überschreiben
+        if not GetSavedWeapons() then
+            RememberWeapons()
+        end
+        ScheduleWeaponRestore()
+        self:SetAttribute("type", "macro")
+        self:SetAttribute("macrotext", "/equip item:" .. poleID)
+        local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(poleID)
+        Print(L.POLE_EQUIPPED:format(name or ("item:" .. poleID)))
+        return
+    end
+    self:SetAttribute("type", "spell")
 end)
 
 ---------------------------------------------------------------------------
@@ -489,6 +652,12 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
                 EZFishingDB[key] = value
             end
         end
+        -- Ältere Werte (früher bis 300 Sek.) in den Bereich 0–30 in 5er-Schritten bringen
+        local step = ns.WEAPON_RESTORE_STEP
+        local delay = tonumber(EZFishingDB.weaponRestoreDelay) or ns.defaults.weaponRestoreDelay
+        delay = math.floor(delay / step + 0.5) * step
+        EZFishingDB.weaponRestoreDelay = math.max(ns.WEAPON_RESTORE_MIN,
+            math.min(ns.WEAPON_RESTORE_MAX, delay))
         ns.InitOptions()
         ns.InitMinimapButton()
         self:UnregisterEvent("ADDON_LOADED")
@@ -501,11 +670,16 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         UpdateKeyBinding()
         -- Übrig gebliebene Toneinstellungen (z. B. nach /reload beim Angeln) zurücksetzen
         RestoreFishingSound()
+        -- Nach /reload mit angelegter Angel: Rücktausch-Timer neu starten
+        ScheduleWeaponRestore()
     elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
         local spellID = select(2, ...)
         local channelName = UnitChannelInfo("player")
         Debug(("Kanal gestartet: %s (ID %s)"):format(tostring(channelName), tostring(spellID)))
         if IsFishingSpell(spellID, channelName) then
+            fishingChannelActive = true
+            -- Während des Angelns keine Waffen zurücktauschen
+            CancelWeaponRestore()
             -- Eigene Taste auf "Einholen" umschalten
             UpdateKeyBinding(true)
             if EZFishingDB.enabled and EZFishingDB.forceSound then
@@ -517,9 +691,17 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" then
         -- Angeln beendet (eingeholt oder abgelaufen): Maustaste freigeben
         ClearReelBinding()
-        if IsFishingSpell(select(2, ...)) then
+        -- Classic-Clients liefern beim Stopp nicht immer eine erkennbare Spell-ID,
+        -- daher zählt auch der beim Start gemerkte Angelzustand
+        local stopID = select(2, ...)
+        local wasFishing = fishingChannelActive or IsFishingSpell(stopID)
+        fishingChannelActive = false
+        Debug(("Kanal beendet (ID %s, Angeln: %s)"):format(tostring(stopID), tostring(wasFishing)))
+        if wasFishing then
             -- Eigene Taste wieder auf "Auswerfen"
             UpdateKeyBinding(false)
+            -- Angelpause beginnt: Waffen nach der eingestellten Zeit zurück
+            ScheduleWeaponRestore()
             if EZFishingDB.savedSoundCVars then
                 ScheduleSoundRestore()
             end
@@ -542,6 +724,9 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         end
         if pendingKeyUpdate then
             UpdateKeyBinding()
+        end
+        if pendingWeaponRestore then
+            RestoreWeapons()
         end
     elseif event == "UI_ERROR_MESSAGE" then
         -- arg1 = Fehlertyp, erstes Vararg = lokalisierter Fehlertext
