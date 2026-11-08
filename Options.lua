@@ -145,13 +145,33 @@ function ns.InitOptions()
         return setting
     end
 
+    -- Einträge über Blizzards gesicherten Weg (Settings.RegisterInitializer) in die
+    -- Liste hängen. Settings.CreateCheckbox & Co. und layout:AddInitializer schreiben
+    -- sonst aus Addon-Code in Blizzards Liste; die Suche im Optionsfenster liest diese
+    -- Einträge und wird dadurch "tainted" (Fehler "EZFishing wurde geblockt", z. B.
+    -- bei der Suche nach "UI" und dem Regler für die UI-Skalierung).
+    local function Register(initializer)
+        if Settings.RegisterInitializer then
+            Settings.RegisterInitializer(category, initializer)
+        else
+            layout:AddInitializer(initializer)
+        end
+        return initializer
+    end
+
+    -- Buttons ohne Suchbegriffe anlegen: die würden aus Addon-Code in den
+    -- Initializer geschrieben und bei jeder Suche gelesen
+    local function AddButton(name, buttonText, onClick, tooltip)
+        return Register(CreateSettingsButtonInitializer(name, buttonText, onClick, tooltip, false))
+    end
+
     local function AddHeader(text)
-        layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(text))
+        Register(CreateSettingsListSectionHeaderInitializer(text))
     end
 
     local function AddCheckbox(key, name, tooltip)
         local setting = RegisterSetting(key, Settings.VarType.Boolean, name)
-        return Settings.CreateCheckbox(category, setting, tooltip)
+        return Register(Settings.CreateCheckboxInitializer(setting, nil, tooltip))
     end
 
     local function AddSlider(key, name, tooltip, minValue, maxValue, step, format)
@@ -160,7 +180,7 @@ function ns.InitOptions()
         options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value)
             return format:format(math.floor(value + 0.5))
         end)
-        return Settings.CreateSlider(category, setting, options, tooltip)
+        return Register(Settings.CreateSliderInitializer(setting, options, tooltip))
     end
 
     local function AddDropdown(key, name, tooltip, entries)
@@ -172,24 +192,21 @@ function ns.InitOptions()
             end
             return container:GetData()
         end
-        return Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+        return Register(Settings.CreateDropdownInitializer(setting, GetOptions, tooltip))
     end
 
     -- Allgemein
     AddHeader(L.HEADER_GENERAL)
     AddCheckbox("enabled", L.OPT_ENABLED, L.OPT_ENABLED_DESC)
-    layout:AddInitializer(CreateSettingsButtonInitializer(L.OPT_SETUP, L.OPT_SETUP_BUTTON,
-        function() ns.ShowOnboarding() end, L.OPT_SETUP_DESC, true))
+    AddButton(L.OPT_SETUP, L.OPT_SETUP_BUTTON, function() ns.ShowOnboarding() end, L.OPT_SETUP_DESC)
 
     -- Auslösung: Doppel-Rechtsklick oder eigene Taste
     local triggerInit = AddDropdown("triggerMode", L.OPT_TRIGGER, L.OPT_TRIGGER_DESC, {
         { ns.TRIGGER_DOUBLECLICK, L.TRIGGER_DOUBLECLICK },
         { ns.TRIGGER_KEY, L.TRIGGER_KEY },
     })
-    local keyInit = CreateSettingsButtonInitializer(L.OPT_KEY, GetKeyButtonText(),
-        ns.ShowKeyCapture, L.OPT_KEY_DESC, true)
+    local keyInit = AddButton(L.OPT_KEY, GetKeyButtonText(), ns.ShowKeyCapture, L.OPT_KEY_DESC)
     keyInitializer = keyInit
-    layout:AddInitializer(keyInit)
     if keyInit.SetParentInitializer then
         keyInit:SetParentInitializer(triggerInit, function()
             return EZFishingDB.triggerMode == ns.TRIGGER_KEY
@@ -242,8 +259,7 @@ function ns.InitOptions()
 
     -- Eigener Zurücksetzen-Button: setzt ausschließlich die EZFishing-Optionen zurück
     AddHeader(L.OPT_RESET)
-    layout:AddInitializer(CreateSettingsButtonInitializer(L.OPT_RESET, L.OPT_RESET_BUTTON,
-        ns.ConfirmReset, L.OPT_RESET_DESC, true))
+    AddButton(L.OPT_RESET, L.OPT_RESET_BUTTON, ns.ConfirmReset, L.OPT_RESET_DESC)
 
     Settings.RegisterAddOnCategory(category)
     ns.HookDefaultsButton()
