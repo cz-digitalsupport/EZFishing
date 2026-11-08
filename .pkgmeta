@@ -7,4 +7,4 @@ ignore:
   - .gitattributes
   - .pkgmeta
   - README.md
-  - DESCRIPTION.html
+  - DESCRIPTION.md

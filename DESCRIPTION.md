@@ -36,7 +36,13 @@ Choose a custom key instead. The first press casts, the second press reels in th
 
 Find everything under Options › AddOns › EZFishing.
 
-| 🎣 `/ezf` |opens the options | | 🎣 `/ezf toggle` |enables or disables the addon | | 🎣 `/ezf reel` |switches reeling in on or off | | 🎣 `/ezf lock &lt;seconds&gt;` |sets the lock time | | 🎣 `/ezf setup` |starts the setup assistant | | 🎣 `/ezf debug` |toggles diagnostic messages |
+| 🎣 `/ezf` | opens the options |
+| --- | --- |
+| 🎣 `/ezf toggle` | enables or disables the addon |
+| 🎣 `/ezf reel` | switches reeling in on or off |
+| 🎣 `/ezf lock <seconds>` | sets the lock time |
+| 🎣 `/ezf setup` | starts the setup assistant |
+| 🎣 `/ezf debug` | toggles diagnostic messages |
 
 <h3 style="color:#1e88b4">🌍 Languages</h3>
 
@@ -80,7 +86,13 @@ Wähle stattdessen eine eigene Taste. Der erste Druck wirft aus, der zweite holt
 
 Alles findest du unter Optionen › AddOns › EZFishing.
 
-| 🎣 `/ezf` |öffnet die Optionen | | 🎣 `/ezf toggle` |schaltet das Addon ein oder aus | | 🎣 `/ezf reel` |schaltet das Einholen ein oder aus | | 🎣 `/ezf lock &lt;Sekunden&gt;` |stellt die Sperrzeit ein | | 🎣 `/ezf setup` |startet den Einrichtungsassistenten | | 🎣 `/ezf debug` |schaltet Diagnosemeldungen um |
+| 🎣 `/ezf` | öffnet die Optionen |
+| --- | --- |
+| 🎣 `/ezf toggle` | schaltet das Addon ein oder aus |
+| 🎣 `/ezf reel` | schaltet das Einholen ein oder aus |
+| 🎣 `/ezf lock <Sekunden>` | stellt die Sperrzeit ein |
+| 🎣 `/ezf setup` | startet den Einrichtungsassistenten |
+| 🎣 `/ezf debug` | schaltet Diagnosemeldungen um |
 
 <h3 style="color:#1e88b4">🌍 Sprachen</h3>
 
@@ -124,7 +136,13 @@ Choisissez une touche personnalisée. Le premier appui lance la ligne, le second
 
 Tout se trouve dans Options › AddOns › EZFishing.
 
-| 🎣 `/ezf` |ouvre les options | | 🎣 `/ezf toggle` |active ou désactive l'addon | | 🎣 `/ezf reel` |active ou désactive le ramenage du bouchon | | 🎣 `/ezf lock &lt;secondes&gt;` |règle la durée de blocage | | 🎣 `/ezf setup` |lance l'assistant de configuration | | 🎣 `/ezf debug` |active ou désactive les messages de diagnostic |
+| 🎣 `/ezf` | ouvre les options |
+| --- | --- |
+| 🎣 `/ezf toggle` | active ou désactive l'addon |
+| 🎣 `/ezf reel` | active ou désactive le ramenage du bouchon |
+| 🎣 `/ezf lock <secondes>` | règle la durée de blocage |
+| 🎣 `/ezf setup` | lance l'assistant de configuration |
+| 🎣 `/ezf debug` | active ou désactive les messages de diagnostic |
 
 <h3 style="color:#1e88b4">🌍 Langues</h3>
 
@@ -168,7 +186,13 @@ Elige una tecla personalizada. La primera pulsación lanza la caña y la segunda
 
 Todo está en Opciones › AddOns › EZFishing.
 
-| 🎣 `/ezf` |abre las opciones | | 🎣 `/ezf toggle` |activa o desactiva el addon | | 🎣 `/ezf reel` |activa o desactiva recoger el corcho | | 🎣 `/ezf lock &lt;segundos&gt;` |fija el tiempo de bloqueo | | 🎣 `/ezf setup` |inicia el asistente de configuración | | 🎣 `/ezf debug` |activa o desactiva los mensajes de diagnóstico |
+| 🎣 `/ezf` | abre las opciones |
+| --- | --- |
+| 🎣 `/ezf toggle` | activa o desactiva el addon |
+| 🎣 `/ezf reel` | activa o desactiva recoger el corcho |
+| 🎣 `/ezf lock <segundos>` | fija el tiempo de bloqueo |
+| 🎣 `/ezf setup` | inicia el asistente de configuración |
+| 🎣 `/ezf debug` | activa o desactiva los mensajes de diagnóstico |
 
 <h3 style="color:#1e88b4">🌍 Idiomas</h3>
 
@@ -212,7 +236,13 @@ Scegli un tasto personalizzato. La prima pressione lancia la canna, la seconda r
 
 Tutto si trova in Opzioni › AddOn › EZFishing.
 
-| 🎣 `/ezf` |apre le opzioni | | 🎣 `/ezf toggle` |attiva o disattiva l'addon | | 🎣 `/ezf reel` |attiva o disattiva il recupero del galleggiante | | 🎣 `/ezf lock &lt;secondi&gt;` |imposta il tempo di blocco | | 🎣 `/ezf setup` |avvia l'assistente di configurazione | | 🎣 `/ezf debug` |attiva o disattiva i messaggi diagnostici |
+| 🎣 `/ezf` | apre le opzioni |
+| --- | --- |
+| 🎣 `/ezf toggle` | attiva o disattiva l'addon |
+| 🎣 `/ezf reel` | attiva o disattiva il recupero del galleggiante |
+| 🎣 `/ezf lock <secondi>` | imposta il tempo di blocco |
+| 🎣 `/ezf setup` | avvia l'assistente di configurazione |
+| 🎣 `/ezf debug` | attiva o disattiva i messaggi diagnostici |
 
 <h3 style="color:#1e88b4">🌍 Lingue</h3>
 
@@ -256,7 +286,13 @@ Escolha uma tecla personalizada. O primeiro toque lança a vara e o segundo reco
 
 Tudo fica em Opções › AddOns › EZFishing.
 
-| 🎣 `/ezf` |abre as opções | | 🎣 `/ezf toggle` |ativa ou desativa o addon | | 🎣 `/ezf reel` |liga ou desliga o recolhimento da boia | | 🎣 `/ezf lock &lt;segundos&gt;` |define o tempo de bloqueio | | 🎣 `/ezf setup` |inicia o assistente de configuração | | 🎣 `/ezf debug` |liga ou desliga as mensagens de diagnóstico |
+| 🎣 `/ezf` | abre as opções |
+| --- | --- |
+| 🎣 `/ezf toggle` | ativa ou desativa o addon |
+| 🎣 `/ezf reel` | liga ou desliga o recolhimento da boia |
+| 🎣 `/ezf lock <segundos>` | define o tempo de bloqueio |
+| 🎣 `/ezf setup` | inicia o assistente de configuração |
+| 🎣 `/ezf debug` | liga ou desliga as mensagens de diagnóstico |
 
 <h3 style="color:#1e88b4">🌍 Idiomas</h3>
 
@@ -300,7 +336,13 @@ EZFishing работает в WoW Forever так же, как в Retail, и ав
 
 Всё находится в разделе Настройки › Модификации › EZFishing.
 
-| 🎣 `/ezf` |открывает настройки | | 🎣 `/ezf toggle` |включает или выключает аддон | | 🎣 `/ezf reel` |включает или выключает подсечку | | 🎣 `/ezf lock &lt;секунды&gt;` |задаёт время блокировки | | 🎣 `/ezf setup` |запускает мастер настройки | | 🎣 `/ezf debug` |включает или выключает диагностические сообщения |
+| 🎣 `/ezf` | открывает настройки |
+| --- | --- |
+| 🎣 `/ezf toggle` | включает или выключает аддон |
+| 🎣 `/ezf reel` | включает или выключает подсечку |
+| 🎣 `/ezf lock <секунды>` | задаёт время блокировки |
+| 🎣 `/ezf setup` | запускает мастер настройки |
+| 🎣 `/ezf debug` | включает или выключает диагностические сообщения |
 
 <h3 style="color:#1e88b4">🌍 Языки</h3>
 
@@ -344,7 +386,13 @@ NPC, 플레이어, 보물 상자, 약초, 우편함, 퀘스트 오브젝트를 �
 
 모든 설정은 설정 › 애드온 › EZFishing에 있습니다.
 
-| 🎣 `/ezf` |설정 열기 | | 🎣 `/ezf toggle` |애드온 켜기 또는 끄기 | | 🎣 `/ezf reel` |찌 건지기 켜기 또는 끄기 | | 🎣 `/ezf lock &lt;초&gt;` |잠금 시간 설정 | | 🎣 `/ezf setup` |설정 도우미 시작 | | 🎣 `/ezf debug` |진단 메시지 켜기 또는 끄기 |
+| 🎣 `/ezf` | 설정 열기 |
+| --- | --- |
+| 🎣 `/ezf toggle` | 애드온 켜기 또는 끄기 |
+| 🎣 `/ezf reel` | 찌 건지기 켜기 또는 끄기 |
+| 🎣 `/ezf lock <초>` | 잠금 시간 설정 |
+| 🎣 `/ezf setup` | 설정 도우미 시작 |
+| 🎣 `/ezf debug` | 진단 메시지 켜기 또는 끄기 |
 
 <h3 style="color:#1e88b4">🌍 지원 언어</h3>
 
@@ -388,7 +436,13 @@ EZFishing 在 WoW Forever 和正式服上都能运行，并会自动识别所有
 
 所有设置位于 选项 › 插件 › EZFishing。
 
-| 🎣 `/ezf` |打开选项 | | 🎣 `/ezf toggle` |开启或关闭插件 | | 🎣 `/ezf reel` |开启或关闭收回鱼漂 | | 🎣 `/ezf lock &lt;秒&gt;` |设置锁定时间 | | 🎣 `/ezf setup` |启动设置向导 | | 🎣 `/ezf debug` |开启或关闭诊断信息 |
+| 🎣 `/ezf` | 打开选项 |
+| --- | --- |
+| 🎣 `/ezf toggle` | 开启或关闭插件 |
+| 🎣 `/ezf reel` | 开启或关闭收回鱼漂 |
+| 🎣 `/ezf lock <秒>` | 设置锁定时间 |
+| 🎣 `/ezf setup` | 启动设置向导 |
+| 🎣 `/ezf debug` | 开启或关闭诊断信息 |
 
 <h3 style="color:#1e88b4">🌍 支持语言</h3>
 
@@ -432,7 +486,13 @@ EZFishing 在 WoW Forever 和正式服上都能運作，並會自動辨識所有
 
 所有設定位於 選項 › 插件 › EZFishing。
 
-| 🎣 `/ezf` |開啟選項 | | 🎣 `/ezf toggle` |開啟或關閉外掛 | | 🎣 `/ezf reel` |開啟或關閉收回浮標 | | 🎣 `/ezf lock &lt;秒&gt;` |設定鎖定時間 | | 🎣 `/ezf setup` |啟動設定精靈 | | 🎣 `/ezf debug` |開啟或關閉診斷訊息 |
+| 🎣 `/ezf` | 開啟選項 |
+| --- | --- |
+| 🎣 `/ezf toggle` | 開啟或關閉外掛 |
+| 🎣 `/ezf reel` | 開啟或關閉收回浮標 |
+| 🎣 `/ezf lock <秒>` | 設定鎖定時間 |
+| 🎣 `/ezf setup` | 啟動設定精靈 |
+| 🎣 `/ezf debug` | 開啟或關閉診斷訊息 |
 
 <h3 style="color:#1e88b4">🌍 支援語言</h3>
 
