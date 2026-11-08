@@ -11,7 +11,7 @@
 ## Notes-koKR: 오른쪽 더블 클릭으로 낚싯대를 던지고 건집니다.
 ## Notes-zhCN: 右键双击即可抛竿和收竿。
 ## Notes-zhTW: 右鍵雙擊即可拋竿和收竿。
-## Author: Christopher Zeh
+## Author: BuggedOnPurpose
 ## Version: 0.2.6
 ## SavedVariables: EZFishingDB
 ## Category: Professions
@@ -19,7 +19,9 @@
 ## X-Curse-Project-ID: 1697760
 
 Locales.lua
+Zones.lua
 Core.lua
 Options.lua
 Onboarding.lua
 Minimap.lua
+MapInfo.lua

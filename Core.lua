@@ -41,6 +41,13 @@ ns.defaults = {
     autoEquipPole = true,
     -- Nach so vielen Sekunden ohne Angeln die vorherigen Waffen wieder anlegen (0 = aus)
     weaponRestoreDelay = 30,
+    -- Classic-Clients: Angel-Infos zum Gebiet auf der Weltkarte anzeigen
+    showMapInfo = true,
+    -- Fischliste im Karten-Panel aufgeklappt
+    mapInfoExpanded = false,
+    -- Ecke der Karte, an der die Angel-Box sitzt, und ob sie eingeklappt ist
+    mapInfoAnchor = "TOPRIGHT",
+    mapInfoCollapsed = false,
 }
 
 -- Erlaubter Bereich für den Waffen-Rücktausch (auch vom Optionsmenü genutzt)
@@ -263,6 +270,9 @@ function ns.OnStateChanged()
     UpdateKeyBinding()
     if ns.UpdateMinimapButton then
         ns.UpdateMinimapButton()
+    end
+    if ns.UpdateMapInfo then
+        ns.UpdateMapInfo()
     end
 end
 
@@ -670,6 +680,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
             math.min(ns.WEAPON_RESTORE_MAX, delay))
         ns.InitOptions()
         ns.InitMinimapButton()
+        ns.InitMapInfo()
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "SPELLS_CHANGED" then
         -- Neuer Angel-Rang gelernt (Classic) oder Zauberbuch erst jetzt geladen
