@@ -69,6 +69,10 @@ local function BuildSteps()
             options = restoreOptions,
             condition = function() return choices.autoEquipPole end,
         })
+        table.insert(list, {
+            key = "autoLure", title = L.ONB_LURE_TITLE, text = L.ONB_LURE_TEXT,
+            options = YesNo(L.ONB_LURE_YES_DESC, L.ONB_LURE_NO_DESC, true),
+        })
     end
     table.insert(list, {
         key = "showMinimapButton", title = L.ONB_MINIMAP_TITLE, text = L.ONB_MINIMAP_TEXT,

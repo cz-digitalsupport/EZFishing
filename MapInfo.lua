@@ -8,11 +8,21 @@ local L = ns.L
 -- gelten für die Classic-Welt (WoW Forever / Classic Era).
 ---------------------------------------------------------------------------
 
-local PANEL_WIDTH = 230
+local PANEL_WIDTH = 236
 local ROW_HEIGHT = 16
-local PADDING = 8
+local PADDING = 10
 local BUTTON_SIZE = 16
 local MAP_MARGIN = 10
+local CORNER_RADIUS = 14 -- aufgeklappt; eingeklappt wird die Box zur Pille
+
+-- Glas-Optik: halbtransparente Fläche, feiner heller Rand, Glanzkante oben
+local WHITE = "Interface\\Buttons\\WHITE8X8"
+local CIRCLE_MASK = "Interface\\CharacterFrame\\TempPortraitAlphaMask"
+local GLASS_FILL = { 0.07, 0.08, 0.11, 0.72 }
+local GLASS_BORDER = { 1, 1, 1, 0.22 }
+local GLASS_SHINE = { 1, 1, 1, 0.35 }
+local GLASS_DIVIDER = { 1, 1, 1, 0.10 }
+local TITLE_TEXT = "|cff5ac8faEZ|r|cffffffffFishing|r"
 
 -- Wählbare Ankerpunkte der Box auf der Karte
 local ANCHORS = { "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT" }
@@ -44,9 +54,9 @@ local function GetFishingSkill()
     if GetNumSkillLines and GetSkillLineInfo then
         local fishingName = GetFishingSpellName()
         for index = 1, GetNumSkillLines() do
-            local name, isHeader, _, rank, _, modifier = GetSkillLineInfo(index)
+            local name, isHeader, _, rank, _, modifier, maxRank = GetSkillLineInfo(index)
             if not isHeader and name and (name == fishingName or name == PROFESSIONS_FISHING) then
-                return rank or 0, modifier or 0
+                return rank or 0, modifier or 0, maxRank
             end
         end
     end
@@ -54,12 +64,13 @@ local function GetFishingSkill()
     if GetProfessions and GetProfessionInfo then
         local fishingIndex = select(4, GetProfessions())
         if fishingIndex then
-            local _, _, rank, _, _, _, _, modifier = GetProfessionInfo(fishingIndex)
-            return rank or 0, modifier or 0
+            local _, _, rank, maxRank, _, _, _, modifier = GetProfessionInfo(fishingIndex)
+            return rank or 0, modifier or 0, maxRank
         end
     end
     return nil
 end
+ns.GetFishingSkill = GetFishingSkill
 
 local function ColorForSkill(skill, zone)
     if skill < zone.min then
@@ -87,6 +98,7 @@ local function GetItemNameAndIcon(itemID)
     end
     return name, icon
 end
+ns.GetItemNameAndIcon = GetItemNameAndIcon
 
 local function FormatNote(note)
     if not note then return nil end
@@ -106,6 +118,73 @@ local function FishLine(fish, skill)
         text = text .. " " .. color .. L.MAP_FISH_FROM:format(fish.minSkill) .. "|r"
     end
     return text
+end
+
+---------------------------------------------------------------------------
+-- Abgerundete Fläche aus Texturen: Mittelteil, zwei Seitenstreifen und vier
+-- per Kreismaske abgerundete Ecken (ohne Überlappung, damit die Transparenz
+-- gleichmäßig bleibt). inset rückt die Fläche nach innen (für den Rand).
+---------------------------------------------------------------------------
+local CORNERS = { "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT" }
+
+local function CreateRoundedRect(parent, subLevel, color, inset)
+    local shape = { parent = parent, inset = inset or 0, parts = {}, corners = {} }
+    local function NewPart()
+        local tex = parent:CreateTexture(nil, "BACKGROUND", nil, subLevel)
+        tex:SetTexture(WHITE)
+        tex:SetVertexColor(unpack(color))
+        shape.parts[#shape.parts + 1] = tex
+        return tex
+    end
+    shape.center, shape.left, shape.right = NewPart(), NewPart(), NewPart()
+    for _, point in ipairs(CORNERS) do
+        local tex = NewPart()
+        local mask
+        if tex.AddMaskTexture and parent.CreateMaskTexture then
+            mask = parent:CreateMaskTexture()
+            mask:SetTexture(CIRCLE_MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+            tex:AddMaskTexture(mask)
+        end
+        shape.corners[point] = { tex = tex, mask = mask }
+    end
+    return shape
+end
+
+local function SetRoundedRadius(shape, radius)
+    local parent, i = shape.parent, shape.inset
+    local r = math.max(radius - i, 0)
+    shape.center:ClearAllPoints()
+    shape.center:SetPoint("TOPLEFT", parent, "TOPLEFT", i + r, -i)
+    shape.center:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -(i + r), i)
+    shape.left:ClearAllPoints()
+    shape.left:SetPoint("TOPLEFT", parent, "TOPLEFT", i, -(i + r))
+    shape.left:SetPoint("BOTTOMRIGHT", parent, "BOTTOMLEFT", i + r, i + r)
+    shape.right:ClearAllPoints()
+    shape.right:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -i, -(i + r))
+    shape.right:SetPoint("BOTTOMLEFT", parent, "BOTTOMRIGHT", -(i + r), i + r)
+    for point, corner in pairs(shape.corners) do
+        local x = point:find("RIGHT") and -i or i
+        local y = point:find("TOP") and -i or i
+        corner.tex:ClearAllPoints()
+        corner.tex:SetPoint(point, parent, point, x, y)
+        corner.tex:SetSize(math.max(r, 0.01), math.max(r, 0.01))
+        if corner.mask then
+            corner.mask:ClearAllPoints()
+            corner.mask:SetPoint(point, corner.tex, point)
+            corner.mask:SetSize(math.max(r * 2, 0.01), math.max(r * 2, 0.01))
+        end
+    end
+end
+
+-- Radius passend zur aktuellen Höhe: eingeklappt eine echte Pille
+local function UpdateGlassShape(height)
+    local radius = math.min(panel.collapsed and height / 2 or CORNER_RADIUS, math.floor(height / 2))
+    SetRoundedRadius(panel.glassBorder, radius)
+    SetRoundedRadius(panel.glassFill, radius)
+    panel.shine:ClearAllPoints()
+    panel.shine:SetPoint("TOPLEFT", panel, "TOPLEFT", radius, -1)
+    panel.shine:SetPoint("TOPRIGHT", panel, "TOPRIGHT", -radius, -1)
+    panel.divider:SetShown(not panel.collapsed)
 end
 
 ---------------------------------------------------------------------------
@@ -214,7 +293,7 @@ local function Refresh()
     local rank, modifier = GetFishingSkill()
     local skill = rank and (rank + modifier)
 
-    panel.title:SetText(L.MAP_TITLE)
+    panel.title:SetText(TITLE_TEXT)
     ApplyLayout()
 
     -- Eingeklappt: nur die Titelzeile
@@ -224,7 +303,9 @@ local function Refresh()
         for _, row in ipairs(fishRows) do
             row:Hide()
         end
-        panel:SetHeight(PADDING * 2 + BUTTON_SIZE)
+        local height = PADDING * 2 + BUTTON_SIZE
+        panel:SetHeight(height)
+        UpdateGlassShape(height)
         return
     end
     lines:Show()
@@ -240,6 +321,13 @@ local function Refresh()
                 .. skill .. bonus .. "|r"
         else
             text = text .. "\n" .. L.MAP_YOUR_SKILL .. " " .. COLOR_RED .. L.MAP_NOT_LEARNED .. "|r"
+        end
+        -- Nächster Angel-Rang und wo man ihn lernt (Lehrer, Buch, Quest)
+        local nextRank = ns.GetNextFishingRank and ns.GetNextFishingRank()
+        if nextRank then
+            text = text .. "\n" .. L.MAP_NEXT_RANK .. " " .. COLOR_YELLOW .. ns.FishingRankLabel(nextRank)
+                .. "|r\n" .. COLOR_GRAY .. L["RANK_SOURCE_" .. strupper(nextRank.source)]
+                .. " · " .. ns.FishingRankRequirement(nextRank) .. "|r"
         end
         lines:SetText(text)
         panel.fishHeader:SetShown(zone.fish ~= nil and #zone.fish > 0)
@@ -273,6 +361,7 @@ local function Refresh()
         height = height + 4 + ROW_HEIGHT + shown * ROW_HEIGHT + (shown > 0 and 4 or 0)
     end
     panel:SetHeight(height)
+    UpdateGlassShape(height)
 end
 
 -- Fischnamen nachladen, sobald der Item-Cache sie kennt
@@ -320,26 +409,41 @@ ShowAnchorMenu = function(owner)
 end
 
 local function CreatePanel()
-    panel = CreateFrame("Frame", "EZFishingMapPanel", GetMapCanvas(), BackdropTemplateMixin and "BackdropTemplate")
+    panel = CreateFrame("Frame", "EZFishingMapPanel", GetMapCanvas())
     panel:SetWidth(PANEL_WIDTH)
     -- Strata vom Kartenfenster erben (auch im Vollbild), aber über den Karten-Pins liegen
     panel:SetFrameLevel(GetMapCanvas():GetFrameLevel() + 1000)
-    panel:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true, tileSize = 16, edgeSize = 14,
-        insets = { left = 3, right = 3, top = 3, bottom = 3 },
-    })
-    panel:SetBackdropColor(0, 0, 0, 0.75)
-    panel:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
     panel:EnableMouse(true)
     panel.expanded = EZFishingDB.mapInfoExpanded
     panel.collapsed = EZFishingDB.mapInfoCollapsed
     panel.bottomSpace = 0
 
+    -- Glas-Hintergrund: heller Rand (außen), dunkle Fläche 1 px nach innen versetzt
+    panel.glassBorder = CreateRoundedRect(panel, -8, GLASS_BORDER, 0)
+    panel.glassFill = CreateRoundedRect(panel, -7, GLASS_FILL, 1)
+    panel.shine = panel:CreateTexture(nil, "BORDER")
+    panel.shine:SetTexture(WHITE)
+    panel.shine:SetVertexColor(unpack(GLASS_SHINE))
+    panel.shine:SetHeight(1)
+    panel.divider = panel:CreateTexture(nil, "BORDER")
+    panel.divider:SetTexture(WHITE)
+    panel.divider:SetVertexColor(unpack(GLASS_DIVIDER))
+    panel.divider:SetHeight(1)
+    panel.divider:SetPoint("TOPLEFT", panel, "TOPLEFT", PADDING, -(PADDING + BUTTON_SIZE + 2))
+    panel.divider:SetPoint("TOPRIGHT", panel, "TOPRIGHT", -PADDING, -(PADDING + BUTTON_SIZE + 2))
+
+    -- Rundes Angel-Symbol
     panel.icon = panel:CreateTexture(nil, "ARTWORK")
     panel.icon:SetSize(BUTTON_SIZE, BUTTON_SIZE)
     panel.icon:SetTexture("Interface\\Icons\\Trade_Fishing")
+    if panel.icon.AddMaskTexture and panel.CreateMaskTexture then
+        local iconMask = panel:CreateMaskTexture()
+        iconMask:SetTexture(CIRCLE_MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+        iconMask:SetAllPoints(panel.icon)
+        panel.icon:AddMaskTexture(iconMask)
+    else
+        panel.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    end
 
     -- Zahnrad: Ankerpunkt wählen
     local gear = CreateFrame("Button", nil, panel)
@@ -421,6 +525,9 @@ local function UpdateForMap()
     if EZFishingDB.debug then
         ns.Print("|cff999999Karte: " .. tostring(mapID) .. "|r")
     end
+    if ns.UpdateTrainerPins then
+        ns.UpdateTrainerPins(mapID)
+    end
     local zone = EZFishingDB.showMapInfo and mapID and ns.FISHING_ZONES[mapID]
     currentZone = zone
     if not zone then
@@ -436,8 +543,13 @@ end
 function ns.UpdateMapInfo()
     if WorldMapFrame and WorldMapFrame:IsShown() then
         UpdateForMap()
-    elseif panel and not EZFishingDB.showMapInfo then
-        panel:Hide()
+    else
+        if panel and not EZFishingDB.showMapInfo then
+            panel:Hide()
+        end
+        if ns.UpdateTrainerPins and not EZFishingDB.showTrainers then
+            ns.UpdateTrainerPins(nil)
+        end
     end
 end
 

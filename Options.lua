@@ -203,11 +203,15 @@ function ns.InitOptions()
     if restoreInit and restoreInit.SetParentInitializer then
         restoreInit:SetParentInitializer(poleInit, function() return EZFishingDB.autoEquipPole end)
     end
+    if not ns.IS_RETAIL then
+        AddCheckbox("autoLure", L.OPT_AUTO_LURE, L.OPT_AUTO_LURE_DESC)
+    end
     AddCheckbox("forceSound", L.OPT_SOUND, L.OPT_SOUND_DESC)
     AddSlider("noWaterLock", L.OPT_LOCK, L.OPT_LOCK_DESC, LOCK_MIN, LOCK_MAX, LOCK_STEP, L.SECONDS)
     AddCheckbox("showMinimapButton", L.OPT_MINIMAP, L.OPT_MINIMAP_DESC)
     if not ns.IS_RETAIL then
         AddCheckbox("showMapInfo", L.OPT_MAPINFO, L.OPT_MAPINFO_DESC)
+        AddCheckbox("showTrainers", L.OPT_TRAINERS, L.OPT_TRAINERS_DESC)
     end
 
     -- Einholen / WoW-Interaktionseinstellungen

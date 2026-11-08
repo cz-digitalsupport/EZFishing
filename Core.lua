@@ -41,8 +41,12 @@ ns.defaults = {
     autoEquipPole = true,
     -- Nach so vielen Sekunden ohne Angeln die vorherigen Waffen wieder anlegen (0 = aus)
     weaponRestoreDelay = 30,
+    -- Classic-Clients: ohne aktiven Köder vor dem Auswerfen den besten Köder anbringen
+    autoLure = true,
     -- Classic-Clients: Angel-Infos zum Gebiet auf der Weltkarte anzeigen
     showMapInfo = true,
+    -- Classic-Clients: Angellehrer, Expertenbuch und Fachmann-Quest auf der Karte markieren
+    showTrainers = true,
     -- Fischliste im Karten-Panel aufgeklappt
     mapInfoExpanded = false,
     -- Ecke der Karte, an der die Angel-Box sitzt, und ob sie eingeklappt ist
@@ -149,7 +153,7 @@ castButton:SetScript("PostClick", function(self)
     if actionType == "spell" then
         Debug("Angel ausgeworfen")
     elseif actionType == "macro" then
-        Debug("Abgesessen")
+        Debug("Makro: " .. tostring(self:GetAttribute("macrotext")))
     end
     ClearCastBinding()
 end)
@@ -437,6 +441,38 @@ function GetPoleToEquip()
 end
 
 ---------------------------------------------------------------------------
+-- Köder (Classic): vor dem Auswerfen den besten verfügbaren Köder anbringen
+---------------------------------------------------------------------------
+-- Sortiert nach Bonus; skill = benötigte Angelfertigkeit (Wowhead Classic)
+local LURES = {
+    { id = 6533, skill = 100 }, -- Aquadynamic Fish Attractor (+100)
+    { id = 6532, skill = 100 }, -- Bright Baubles (+75)
+    { id = 7307, skill = 100 }, -- Flesh Eating Worm (+75)
+    { id = 6530, skill = 50 },  -- Nightcrawlers (+50)
+    { id = 6811, skill = 50 },  -- Aquadynamic Fish Lens (+50)
+    { id = 6529, skill = 1 },   -- Shiny Bauble (+25)
+}
+-- So lange nach dem Anbringen nicht erneut versuchen (Zauberzeit, Verzögerung der Anzeige)
+local LURE_RETRY_DELAY = 8
+local lureAppliedAt = 0
+
+local getItemCount = (C_Item and C_Item.GetItemCount) or GetItemCount
+
+-- Liefert die Item-ID des besten Köders, wenn an der Angel keiner aktiv ist
+local function GetLureToApply()
+    if FISHING_SPELL_ID == FISHING_CAST_IDS[1] then return nil end
+    if not IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then return nil end
+    if GetWeaponEnchantInfo and GetWeaponEnchantInfo() then return nil end
+    if GetTime() - lureAppliedAt < LURE_RETRY_DELAY or not getItemCount then return nil end
+    local rank = ns.GetFishingSkill and ns.GetFishingSkill() or 0
+    for _, lure in ipairs(LURES) do
+        if rank >= lure.skill and getItemCount(lure.id) > 0 then
+            return lure.id
+        end
+    end
+end
+
+---------------------------------------------------------------------------
 -- Vorherige Waffen merken und nach einer Angelpause wieder anlegen
 ---------------------------------------------------------------------------
 local OFFHAND_SLOT = INVSLOT_OFFHAND or 17
@@ -559,6 +595,16 @@ castButton:SetScript("PreClick", function(self, _, down)
         self:SetAttribute("macrotext", "/equip item:" .. poleID)
         local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(poleID)
         Print(L.POLE_EQUIPPED:format(name or ("item:" .. poleID)))
+        return
+    end
+    local lureID = EZFishingDB.autoLure and GetLureToApply()
+    if lureID then
+        -- Köder auf die Angel (Haupthand) anwenden; die nächste Auslösung wirft aus
+        lureAppliedAt = GetTime()
+        self:SetAttribute("type", "macro")
+        self:SetAttribute("macrotext", ("/use item:%d\n/use %d"):format(lureID, MAINHAND_SLOT))
+        local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(lureID)
+        Print(L.LURE_APPLIED:format(name or ("item:" .. lureID)))
         return
     end
     self:SetAttribute("type", "spell")

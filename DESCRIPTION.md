@@ -1,4 +1,4 @@
-<h1 style="text-align:center;color:#1e88b4;font-size:40px">🎣 EZFishing</h1><p style="text-align:center;font-size:17px;color:#e8b04a">\_Cast and reel in with a double right-click. Fishing, the way it should feel.\_</p><h2 style="text-align:center;color:#0f4c6e;background-color:#e8b04a;border-radius:6px">⚔️ Now on WoW Forever</h2><h3 style="text-align:center;color:#e8b04a">🎣 Back to fishing in WoW Forever? EZFishing is ready.</h3><p style="text-align:center;font-size:16px">EZFishing now runs on WoW Forever as well as on Retail, and it brings extras made for it.</p><p style="text-align:center;font-size:16px">🪝 No fishing pole equipped? Your double right-click equips the best pole from your bags, the next one casts.</p><p style="text-align:center;font-size:16px">⚔️ Your weapons come back on their own after 5 to 30 seconds without fishing.</p><p style="text-align:center;font-size:16px">🧭 A setup assistant walks you through the key options on first start.</p><p style="text-align:center;font-size:16px">🗺️ The zone map shows from which skill you can fish there, when no fish gets away anymore and which fish bite.</p><p style="text-align:center;font-size:15px;color:#1e88b4">🌍 English · Deutsch · Français · Español · Italiano · Português · Русский · 한국어 · 简体中文 · 繁體中文</p><p style="text-align:center;font-size:18px">🌊 🐟 🌊 🎣 🌊 🐠 🌊 🎣 🌊 🐟 🌊</p><h2 style="color:#fff;background-color:#0f4c6e;border-radius:6px">🎣 English</h2><h3 style="color:#1e88b4">🎣 Double right-click. Cast. Reel. Repeat.</h3>
+<h1 style="text-align:center;color:#1e88b4;font-size:40px">🎣 EZFishing</h1><p style="text-align:center;font-size:17px;color:#e8b04a">\_Cast and reel in with a double right-click. Fishing, the way it should feel.\_</p><h2 style="text-align:center;color:#0f4c6e;background-color:#e8b04a;border-radius:6px">⚔️ Now on WoW Forever</h2><h3 style="text-align:center;color:#e8b04a">🎣 Back to fishing in WoW Forever? EZFishing is ready.</h3><p style="text-align:center;font-size:16px">EZFishing now runs on WoW Forever as well as on Retail, and it brings extras made for it.</p><p style="text-align:center;font-size:16px">🪝 No fishing pole equipped? Your double right-click equips the best pole from your bags, the next one casts.</p><p style="text-align:center;font-size:16px">⚔️ Your weapons come back on their own after 5 to 30 seconds without fishing.</p><p style="text-align:center;font-size:16px">🧭 A setup assistant walks you through the key options on first start.</p><p style="text-align:center;font-size:16px">🗺️ The zone map shows from which skill you can fish there, when no fish gets away anymore and which fish bite.</p><p style="text-align:center;font-size:16px">📍 Fishing trainers, the Expert book and Nat Pagle's Artisan quest are marked on the map, filtered by faction.</p><p style="text-align:center;font-size:16px">🪱 No lure on your pole? The best one from your bags is applied before you cast.</p><p style="text-align:center;font-size:15px;color:#1e88b4">🌍 English · Deutsch · Français · Español · Italiano · Português · Русский · 한국어 · 简体中文 · 繁體中文</p><p style="text-align:center;font-size:18px">🌊 🐟 🌊 🎣 🌊 🐠 🌊 🎣 🌊 🐟 🌊</p><h2 style="color:#fff;background-color:#0f4c6e;border-radius:6px">🎣 English</h2><h3 style="color:#1e88b4">🎣 Double right-click. Cast. Reel. Repeat.</h3>
 
 EZFishing makes fishing in World of Warcraft as simple as it should be. Double right-click in the game world and your fishing rod is cast. Double right-click again while you are fishing and the bobber is reeled in. No action bar button, no macro, no keybind juggling.
 
@@ -13,6 +13,10 @@ EZFishing runs on WoW Forever as well as on Retail, and every fishing rank is re
 🧭 Setup assistant: on first start a short guide walks you through the most important options. Open it again anytime with `/ezf setup`.
 
 🗺️ Fishing info on the world map: open a zone map and a box shows the skill you need to fish there, the skill at which no fish gets away, and your own skill including pole and lure, colored red, yellow or green. Hover the fish list for a quick look or click it to show it in the box, each fish with its item tooltip. The gear picks the corner of the map, the arrow folds the box away. Turn it off anytime in the options.
+
+📍 Fishing trainers on the map: the zone map marks every fishing trainer of your faction, plus neutral ones and the trainers in the new WoW Forever zones. Hover a marker to see which skill range it teaches (Apprentice 1–75, Journeyman 75–150). The Expert Fishing book in Booty Bay (Stranglethorn Vale) and Nat Pagle's Artisan quest in Dustwallow Marsh are marked as well, and the map box tells you where to learn your next rank.
+
+🪱 Automatic lures: if no lure is active on your pole, the double right-click or your key first applies the best lure from your bags that your skill allows. The next trigger casts.
 
 <h3 style="color:#1e88b4">🐟 Stays out of your way</h3>
 
@@ -64,6 +68,10 @@ EZFishing läuft auf WoW Forever genauso wie auf Retail und erkennt jeden Angel-
 
 🗺️ Angel-Infos auf der Weltkarte: Öffnest du die Karte eines Gebiets, zeigt eine Box, ab welcher Fertigkeit du dort angeln kannst, ab wann kein Fisch mehr entkommt und deine eigene Fertigkeit inklusive Angel und Köder, eingefärbt in Rot, Gelb oder Grün. Fahr mit der Maus über die Fischliste für einen schnellen Blick oder klick sie an, um sie in der Box anzuzeigen, jeder Fisch mit seinem Item-Tooltip. Mit dem Zahnrad wählst du die Ecke der Karte, mit dem Pfeil klappst du die Box ein. In den Optionen jederzeit abschaltbar.
 
+📍 Angellehrer auf der Karte: Die Zonenkarte markiert jeden Angellehrer deiner Fraktion, dazu neutrale Lehrer und die Lehrer in den neuen WoW-Forever-Zonen. Fahr mit der Maus über eine Markierung und du siehst, welchen Fertigkeitsbereich es dort gibt (Lehrling 1–75, Geselle 75–150). Das Buch für Expertenangeln in Beutebucht (Schlingendorntal) und Nat Pagles Fachmann-Quest in den Düstermarschen sind ebenfalls markiert, und die Box auf der Karte sagt dir, wo du deinen nächsten Rang lernst.
+
+🪱 Köder automatisch: Ist an der Angel kein Köder aktiv, bringt der Doppel-Rechtsklick bzw. deine Taste zuerst den besten Köder aus deinen Taschen an, den deine Fertigkeit erlaubt. Die nächste Auslösung wirft aus.
+
 <h3 style="color:#1e88b4">🐟 Hält sich zurück, wenn du es nicht brauchst</h3>
 
 Es löst nicht aus, wenn du auf NPCs, Spieler, Truhen, Kräuter, Briefkästen oder Questobjekte rechtsklickst, und Fischschwärme bleiben ganz normal anklickbar. Im Kampf, in Bewegung, beim Fliegen, in einem Fahrzeug oder in einer Druidengestalt passiert nichts. Wirfst du dort aus, wo es kein Angelwasser gibt, wird der Doppelklick ein paar Sekunden gesperrt, damit du nicht mit Fehlermeldungen zugespammt wirst.
@@ -113,6 +121,10 @@ EZFishing fonctionne sur WoW Forever comme sur Retail et reconnaît automatiquem
 🧭 Assistant de configuration : au premier lancement, un court guide vous présente les options principales. Rouvrez-le à tout moment avec `/ezf setup`.
 
 🗺️ Infos de pêche sur la carte du monde : ouvrez la carte d'une zone et un cadre indique la compétence requise pour y pêcher, la compétence à partir de laquelle aucun poisson ne s'échappe et votre propre compétence, canne et appât compris, en rouge, jaune ou vert. Survolez la liste des poissons pour un aperçu rapide ou cliquez dessus pour l'afficher dans le cadre, chaque poisson avec son infobulle d'objet. La roue dentée choisit le coin de la carte, la flèche replie le cadre. Désactivable à tout moment dans les options.
+
+📍 Maîtres de pêche sur la carte : la carte de zone indique chaque maître de pêche de votre faction, les maîtres neutres et ceux des nouvelles zones de WoW Forever. Survolez un repère pour voir la tranche de compétence enseignée (Apprenti 1–75, Compagnon 75–150). Le livre de pêche Expert à Baie-du-Butin (Strangleronce) et la quête Artisan de Nat Pagle au marécage d'Âprefange sont aussi indiqués, et l'encadré de la carte vous dit où apprendre votre prochain rang.
+
+🪱 Appâts automatiques : si aucun appât n'est actif sur votre canne, le double clic droit ou votre touche applique d'abord le meilleur appât de vos sacs autorisé par votre compétence. Le déclenchement suivant lance la ligne.
 
 <h3 style="color:#1e88b4">🐟 Discret quand il le faut</h3>
 
@@ -164,6 +176,10 @@ EZFishing funciona en WoW Forever igual que en Retail y reconoce automáticament
 
 🗺️ Info de pesca en el mapa del mundo: al abrir el mapa de una zona, un recuadro muestra la habilidad necesaria para pescar allí, la habilidad a partir de la cual no se escapa ningún pez y tu propia habilidad con caña y cebo incluidos, en rojo, amarillo o verde. Pasa el ratón por la lista de peces para echar un vistazo o haz clic para mostrarla en el recuadro, cada pez con su descripción de objeto. El engranaje elige la esquina del mapa y la flecha pliega el recuadro. Se puede desactivar en cualquier momento en las opciones.
 
+📍 Instructores de pesca en el mapa: el mapa de zona marca cada instructor de pesca de tu facción, además de los neutrales y los de las nuevas zonas de WoW Forever. Pasa el ratón por encima de una marca para ver qué rango de habilidad enseña (Aprendiz 1–75, Oficial 75–150). El libro de pesca Experto en Bahía del Botín (Vega de Tuercespina) y la misión Artesano de Nat Pagle en el Marjal Revolcafango también están marcados, y el recuadro del mapa te indica dónde aprender tu siguiente rango.
+
+🪱 Cebos automáticos: si tu caña no tiene cebo activo, el doble clic derecho o tu tecla aplica primero el mejor cebo de tus bolsas que permita tu habilidad. La siguiente activación lanza.
+
 <h3 style="color:#1e88b4">🐟 No molesta</h3>
 
 No se activa cuando haces clic derecho sobre PNJ, jugadores, cofres, hierbas, buzones u objetos de misión, y los bancos de peces siguen siendo clicables como siempre. No hace nada en combate, en movimiento, volando, en un vehículo o con forma de druida. Si lanzas donde no hay agua para pescar, el doble clic se bloquea unos segundos para que no te llenes de mensajes de error.
@@ -213,6 +229,10 @@ EZFishing funziona su WoW Forever come su Retail e riconosce automaticamente ogn
 🧭 Assistente di configurazione: al primo avvio una breve guida ti accompagna tra le opzioni principali. Riaprilo quando vuoi con `/ezf setup`.
 
 🗺️ Info di pesca sulla mappa del mondo: apri la mappa di una zona e un riquadro mostra l'abilità necessaria per pescarci, l'abilità da cui nessun pesce sfugge e la tua abilità con canna ed esca, colorata in rosso, giallo o verde. Passa il mouse sull'elenco dei pesci per un'occhiata veloce o cliccalo per mostrarlo nel riquadro, ogni pesce con il suo tooltip. L'ingranaggio sceglie l'angolo della mappa, la freccia comprime il riquadro. Disattivabile in qualsiasi momento nelle opzioni.
+
+📍 Istruttori di pesca sulla mappa: la mappa della zona segna ogni istruttore di pesca della tua fazione, più quelli neutrali e quelli delle nuove zone di WoW Forever. Passa il mouse su un segnaposto per vedere quale livello di abilità insegna (Apprendista 1–75, Garzone 75–150). Anche il libro di pesca Esperto alla Baia del Bottino (Rovotorto) e la missione Artigiano di Nat Pagle nelle Paludi di Fondocupo sono segnati, e il riquadro della mappa ti dice dove imparare il grado successivo.
+
+🪱 Esche automatiche: se sulla canna non c'è un'esca attiva, il doppio clic destro o il tuo tasto applica prima la migliore esca delle borse consentita dalla tua abilità. L'attivazione successiva lancia.
 
 <h3 style="color:#1e88b4">🐟 Non ti intralcia</h3>
 
@@ -264,6 +284,10 @@ O EZFishing funciona no WoW Forever assim como no Retail e reconhece automaticam
 
 🗺️ Info de pesca no mapa-múndi: abra o mapa de uma zona e um quadro mostra a perícia necessária para pescar ali, a perícia a partir da qual nenhum peixe escapa e a sua própria perícia com vara e isca, em vermelho, amarelo ou verde. Passe o mouse sobre a lista de peixes para uma olhada rápida ou clique nela para mostrá-la no quadro, cada peixe com sua dica de item. A engrenagem escolhe o canto do mapa e a seta recolhe o quadro. Pode ser desativado a qualquer momento nas opções.
 
+📍 Instrutores de pesca no mapa: o mapa da zona marca cada instrutor de pesca da sua facção, além dos neutros e dos instrutores das novas zonas de WoW Forever. Passe o mouse sobre um marcador para ver qual faixa de perícia ele ensina (Aprendiz 1–75, Artífice 75–150). O livro de pesca Especialista na Angra do Butim (Selva do Espinhaço) e a missão Artesão de Nat Pagle no Pântano Vadeoso também estão marcados, e o quadro do mapa diz onde aprender seu próximo nível.
+
+🪱 Iscas automáticas: se não houver isca ativa na vara, o clique duplo direito ou sua tecla aplica primeiro a melhor isca das bolsas que sua perícia permite. O próximo acionamento lança.
+
 <h3 style="color:#1e88b4">🐟 Não atrapalha</h3>
 
 Ele não é acionado quando você clica com o botão direito em NPCs, jogadores, baús, ervas, caixas de correio ou objetos de missão, e os cardumes continuam clicáveis como sempre. Ele não faz nada em combate, em movimento, voando, em um veículo ou em forma de druida. Se você lançar onde não há água para pescar, o clique duplo fica bloqueado por alguns segundos para que você não seja inundado de mensagens de erro.
@@ -313,6 +337,10 @@ EZFishing работает в WoW Forever так же, как в Retail, и ав
 🧭 Мастер настройки: при первом запуске короткое руководство проведёт вас по главным параметрам. Открыть его снова можно в любой момент командой `/ezf setup`.
 
 🗺️ Рыбалка на карте мира: откройте карту зоны, и окно покажет, с какого навыка там можно ловить рыбу, с какого навыка рыба больше не срывается, а также ваш собственный навык с учётом удочки и приманки, выделенный красным, жёлтым или зелёным. Наведите курсор на список рыбы для быстрого просмотра или щёлкните по нему, чтобы показать его в окне, каждая рыба со своей подсказкой предмета. Шестерёнка выбирает угол карты, стрелка сворачивает окно. Отключается в любой момент в настройках.
+
+📍 Наставники рыбной ловли на карте: карта зоны отмечает всех наставников рыбной ловли вашей фракции, а также нейтральных и наставников в новых зонах WoW Forever. Наведите курсор на метку, чтобы увидеть, какой диапазон навыка там обучают (ученик 1–75, подмастерье 75–150). Книга для умельца в Пиратской Бухте (Тернистая долина) и задание Ната Пэйгла на искусника в Пылевых топях тоже отмечены, а окно на карте подскажет, где изучить следующий ранг.
+
+🪱 Приманки автоматически: если на удочке нет активной приманки, двойной щелчок ПКМ или ваша клавиша сначала применяет лучшую приманку из сумок, доступную при вашем навыке. Следующее нажатие забрасывает.
 
 <h3 style="color:#1e88b4">🐟 Не мешает</h3>
 
@@ -364,6 +392,10 @@ EZFishing은 리테일과 마찬가지로 WoW Forever에서도 작동하며, 모
 
 🗺️ 세계 지도의 낚시 정보: 지역 지도를 열면 그곳에서 낚시를 할 수 있는 숙련도, 물고기가 더 이상 도망가지 않는 숙련도, 낚싯대와 미끼를 포함한 내 숙련도가 빨강, 노랑, 초록으로 표시됩니다. 물고기 목록에 마우스를 올리면 빠르게 확인할 수 있고, 클릭하면 상자 안에 목록이 펼쳐지며 각 물고기의 아이템 툴팁도 볼 수 있습니다. 톱니바퀴로 지도 모서리를 고르고, 화살표로 상자를 접습니다. 설정에서 언제든지 끌 수 있습니다.
 
+📍 지도에 낚시 전문기술 상급자 표시: 지역 지도에 내 진영의 모든 낚시 전문기술 상급자와 중립 상급자, 그리고 WoW Forever 신규 지역의 상급자가 표시됩니다. 표시에 마우스를 올리면 배울 수 있는 숙련도 구간(수습 1–75, 숙련 75–150)이 나옵니다. 무법항(가시덤불 골짜기)의 전문가 낚시 책과 먼지진흙 습지대의 냇 페이글 장인 퀘스트도 표시되며, 지도 상자가 다음 단계를 어디서 배우는지 알려 줍니다.
+
+🪱 미끼 자동 사용: 낚싯대에 활성화된 미끼가 없으면 오른쪽 더블 클릭 또는 지정한 키가 먼저 숙련도로 사용할 수 있는 가방 속 가장 좋은 미끼를 사용합니다. 다시 실행하면 낚싯대를 던집니다.
+
 <h3 style="color:#1e88b4">🐟 방해하지 않습니다</h3>
 
 NPC, 플레이어, 보물 상자, 약초, 우편함, 퀘스트 오브젝트를 오른쪽 클릭할 때는 작동하지 않으며, 물고기 떼는 평소처럼 클릭할 수 있습니다. 전투 중, 이동 중, 비행 중, 차량 탑승 중, 드루이드 변신 상태에서는 아무 일도 일어나지 않습니다. 낚시할 수 없는 곳에 던지면 오류 메시지가 쏟아지지 않도록 더블 클릭이 몇 초 동안 잠깁니다.
@@ -414,6 +446,10 @@ EZFishing 在 WoW Forever 和正式服上都能运行，并会自动识别所有
 
 🗺️ 世界地图上的钓鱼信息：打开区域地图后，一个信息框会显示在此钓鱼所需的技能、不再脱钩的技能，以及你自己包含鱼竿和鱼饵加成的技能，并以红、黄、绿色标示。鼠标悬停在鱼类列表上可快速查看，点击即可在框内展开，每条鱼都带有物品提示。齿轮用于选择地图的角落，箭头用于收起信息框。可随时在选项中关闭。
 
+📍 地图上的钓鱼训练师：区域地图会标记你所在阵营的每位钓鱼训练师，以及中立训练师和 WoW Forever 新区域中的训练师。鼠标悬停在标记上即可查看所教授的技能范围（初级 1–75，中级 75–150）。藏宝海湾（荆棘谷）的高级钓鱼书籍和尘泥沼泽中纳特·帕格的专家级任务也会被标记，地图上的信息框还会告诉你下一等级在哪里学习。
+
+🪱 自动使用鱼饵：鱼竿上没有生效的鱼饵时，右键双击或你设置的按键会先使用背包中你的技能可用的最好鱼饵。再次触发才会抛竿。
+
 <h3 style="color:#1e88b4">🐟 不打扰你</h3>
 
 右键点击 NPC、玩家、宝箱、草药、邮箱或任务物体时不会触发，鱼群也和平时一样可以正常点击。战斗中、移动中、飞行中、载具中以及德鲁伊变形状态下，插件不会有任何动作。如果在没有可钓水域的地方抛竿，右键双击会被锁定几秒钟，避免被错误提示刷屏。
@@ -463,6 +499,10 @@ EZFishing 在 WoW Forever 和正式服上都能運作，並會自動辨識所有
 🧭 設定精靈：首次啟動時，簡短的引導會帶你完成最重要的選項。隨時可以用 `/ezf setup` 再次開啟。
 
 🗺️ 世界地圖上的釣魚資訊：開啟區域地圖後，一個資訊框會顯示在此釣魚所需的技能、不再脫鉤的技能，以及你自己包含釣竿和魚餌加成的技能，並以紅、黃、綠色標示。滑鼠移到魚類清單上可快速查看，點擊即可在框內展開，每條魚都附有物品提示。齒輪用於選擇地圖的角落，箭頭用於收起資訊框。可隨時在選項中關閉。
+
+📍 地圖上的釣魚訓練師：區域地圖會標記你所屬陣營的每位釣魚訓練師，以及中立訓練師和 WoW Forever 新區域中的訓練師。滑鼠移到標記上即可查看所教授的技能範圍（初級 1–75，中級 75–150）。藏寶海灣（荊棘谷）的高級釣魚書籍和塵泥沼澤中納特·帕格的專家級任務也會被標記，地圖上的資訊框還會告訴你下一等級在哪裡學習。
+
+🪱 自動使用魚餌：魚竿上沒有生效的魚餌時，右鍵雙擊或你設定的按鍵會先使用背包中你的技能可用的最好魚餌。再次觸發才會拋竿。
 
 <h3 style="color:#1e88b4">🐟 不打擾你</h3>
 
