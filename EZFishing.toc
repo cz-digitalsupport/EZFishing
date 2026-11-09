@@ -12,7 +12,7 @@
 ## Notes-zhCN: 右键双击即可抛竿和收竿。
 ## Notes-zhTW: 右鍵雙擊即可拋竿和收竿。
 ## Author: BuggedOnPurpose
-## Version: 1.0.1
+## Version: 1.0.2
 ## SavedVariables: EZFishingDB
 ## Category: Professions
 ## IconTexture: Interface\Icons\Trade_Fishing
