@@ -452,9 +452,13 @@ local LURES = {
     { id = 6811, skill = 50 },  -- Aquadynamic Fish Lens (+50)
     { id = 6529, skill = 1 },   -- Shiny Bauble (+25)
 }
--- So lange nach dem Anbringen nicht erneut versuchen (Zauberzeit, Verzögerung der Anzeige)
+-- Nach erfolgreichem Anbringen so lange nicht erneut versuchen,
+-- bis GetWeaponEnchantInfo den Köder meldet
 local LURE_RETRY_DELAY = 8
-local lureAppliedAt = 0
+-- Bis zum Start des Köder-Zaubers (bzw. einer Fehlermeldung) kurz warten
+local LURE_START_GRACE = 1.5
+local lureBlockedUntil = 0
+local lurePending = false -- Köder-Zauber ausgelöst, Ergebnis steht noch aus
 
 local getItemCount = (C_Item and C_Item.GetItemCount) or GetItemCount
 
@@ -463,7 +467,7 @@ local function GetLureToApply()
     if FISHING_SPELL_ID == FISHING_CAST_IDS[1] then return nil end
     if not IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then return nil end
     if GetWeaponEnchantInfo and GetWeaponEnchantInfo() then return nil end
-    if GetTime() - lureAppliedAt < LURE_RETRY_DELAY or not getItemCount then return nil end
+    if GetTime() < lureBlockedUntil or not getItemCount then return nil end
     local rank = ns.GetFishingSkill and ns.GetFishingSkill() or 0
     for _, lure in ipairs(LURES) do
         if rank >= lure.skill and getItemCount(lure.id) > 0 then
@@ -583,6 +587,13 @@ castButton:SetScript("PreClick", function(self, _, down)
         self:SetAttribute("macrotext", "/dismount")
         return
     end
+    -- Köder wird gerade angebracht: nicht auswerfen, sonst bricht das Angeln
+    -- den Köder-Zauber ab
+    if lurePending and (UnitCastingInfo("player") or GetTime() < lureBlockedUntil) then
+        Debug("Nicht ausgeworfen: Köder wird angebracht")
+        self:SetAttribute("type", nil)
+        return
+    end
     local poleID = EZFishingDB.autoEquipPole and GetPoleToEquip()
     if poleID then
         -- Angel anlegen; die nächste Auslösung wirft dann aus
@@ -600,7 +611,8 @@ castButton:SetScript("PreClick", function(self, _, down)
     local lureID = EZFishingDB.autoLure and GetLureToApply()
     if lureID then
         -- Köder auf die Angel (Haupthand) anwenden; die nächste Auslösung wirft aus
-        lureAppliedAt = GetTime()
+        lurePending = true
+        lureBlockedUntil = GetTime() + LURE_START_GRACE
         self:SetAttribute("type", "macro")
         self:SetAttribute("macrotext", ("/use item:%d\n/use %d"):format(lureID, MAINHAND_SLOT))
         local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(lureID)
@@ -705,6 +717,10 @@ eventFrame:RegisterEvent("UI_ERROR_MESSAGE")
 eventFrame:RegisterEvent("SPELLS_CHANGED")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
+eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
+eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
+eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", "player")
+eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
 
 eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
@@ -741,6 +757,24 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         ScheduleWeaponRestore()
         -- Erster Start: Einrichtungsassistent anzeigen
         ns.ScheduleOnboarding()
+    elseif event == "UNIT_SPELLCAST_START" then
+        if lurePending then
+            Debug("Köder-Zauber gestartet")
+        end
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        -- Köder angebracht: bis zur Anzeige als Waffenverzauberung nicht erneut versuchen
+        if lurePending and not IsFishingSpell(select(2, ...)) then
+            lurePending = false
+            lureBlockedUntil = GetTime() + LURE_RETRY_DELAY
+            Debug("Köder angebracht")
+        end
+    elseif event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" then
+        -- Köder fehlgeschlagen oder abgebrochen: beim nächsten Auslösen erneut versuchen
+        if lurePending and not IsFishingSpell(select(2, ...)) then
+            lurePending = false
+            lureBlockedUntil = 0
+            Debug("Köder nicht angebracht, erneuter Versuch beim nächsten Auslösen")
+        end
     elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
         local spellID = select(2, ...)
         local channelName = UnitChannelInfo("player")
