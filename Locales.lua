@@ -1947,6 +1947,69 @@ AddStrings("zhTW", {
     ONB_LURE_NO_DESC = "你自己使用魚餌。",
 })
 
+---------------------------------------------------------------------------
+-- Geangelte Muscheln und Kisten öffnen
+---------------------------------------------------------------------------
+AddStrings("enUS", {
+    OPT_AUTO_OPEN = "Open fished clams and crates",
+    OPT_AUTO_OPEN_DESC = "If your bags hold a clam, crate or trunk you fished up, the double right-click or your key opens it first. Trigger again to cast. Other containers in your bags are left alone.",
+    CONTAINER_OPENED = "Opening: %s – trigger again to cast.",
+})
+
+AddStrings("deDE", {
+    OPT_AUTO_OPEN = "Geangelte Muscheln und Kisten öffnen",
+    OPT_AUTO_OPEN_DESC = "Liegt in deinen Taschen eine Muschel, Kiste oder Truhe, die du geangelt hast, öffnet der Doppel-Rechtsklick bzw. die Taste sie zuerst. Die nächste Auslösung wirft dann aus. Andere Behälter in deinen Taschen bleiben unberührt.",
+    CONTAINER_OPENED = "Wird geöffnet: %s – zum Auswerfen erneut auslösen.",
+})
+
+AddStrings("frFR", {
+    OPT_AUTO_OPEN = "Ouvrir les palourdes et caisses pêchées",
+    OPT_AUTO_OPEN_DESC = "Si vos sacs contiennent une palourde, une caisse ou une malle que vous avez pêchée, le double clic droit ou votre touche l'ouvre d'abord. Un nouvel appui lance ensuite la ligne. Les autres conteneurs de vos sacs ne sont pas touchés.",
+    CONTAINER_OPENED = "Ouverture : %s – déclenchez à nouveau pour lancer.",
+})
+
+AddStrings("esES", {
+    OPT_AUTO_OPEN = "Abrir almejas y cajas pescadas",
+    OPT_AUTO_OPEN_DESC = "Si en tus bolsas hay una almeja, una caja o un baúl que has pescado, el doble clic derecho o tu tecla lo abre primero. La siguiente activación lanza. Los demás contenedores de tus bolsas no se tocan.",
+    CONTAINER_OPENED = "Abriendo: %s – vuelve a activar para lanzar.",
+})
+
+AddStrings("itIT", {
+    OPT_AUTO_OPEN = "Apri vongole e casse pescate",
+    OPT_AUTO_OPEN_DESC = "Se nelle borse c'è una vongola, una cassa o un baule che hai pescato, il doppio clic destro o il tuo tasto lo apre per primo. L'attivazione successiva lancia. Gli altri contenitori nelle borse non vengono toccati.",
+    CONTAINER_OPENED = "Apertura: %s – attiva di nuovo per lanciare.",
+})
+
+AddStrings("ptBR", {
+    OPT_AUTO_OPEN = "Abrir mariscos e caixas pescados",
+    OPT_AUTO_OPEN_DESC = "Se houver nas bolsas um marisco, uma caixa ou um baú que você pescou, o clique duplo direito ou sua tecla abre esse item primeiro. O próximo acionamento lança. Os outros recipientes das bolsas não são tocados.",
+    CONTAINER_OPENED = "Abrindo: %s – acione novamente para lançar.",
+})
+
+AddStrings("ruRU", {
+    OPT_AUTO_OPEN = "Открывать выловленных моллюсков и ящики",
+    OPT_AUTO_OPEN_DESC = "Если в сумках лежит выловленный вами моллюск, ящик или сундук, двойной щелчок ПКМ или ваша клавиша сначала открывает его. Следующее нажатие забрасывает. Остальные контейнеры в сумках аддон не трогает.",
+    CONTAINER_OPENED = "Открывается: %s – нажмите ещё раз, чтобы забросить.",
+})
+
+AddStrings("koKR", {
+    OPT_AUTO_OPEN = "낚은 조개와 상자 열기",
+    OPT_AUTO_OPEN_DESC = "가방에 직접 낚은 조개, 상자, 궤짝이 있으면 오른쪽 더블 클릭 또는 지정한 키가 먼저 그것을 엽니다. 다시 실행하면 낚싯대를 던집니다. 가방의 다른 상자는 건드리지 않습니다.",
+    CONTAINER_OPENED = "여는 중: %s – 다시 실행하면 낚싯대를 던집니다.",
+})
+
+AddStrings("zhCN", {
+    OPT_AUTO_OPEN = "打开钓到的蚌壳和箱子",
+    OPT_AUTO_OPEN_DESC = "背包里有你钓到的蚌壳、箱子或宝箱时，右键双击或你设置的按键会先打开它。再次触发才会抛竿。背包中的其他容器不会被打开。",
+    CONTAINER_OPENED = "正在打开：%s – 再次触发即可抛竿。",
+})
+
+AddStrings("zhTW", {
+    OPT_AUTO_OPEN = "打開釣到的蚌殼和箱子",
+    OPT_AUTO_OPEN_DESC = "背包裡有你釣到的蚌殼、箱子或寶箱時，右鍵雙擊或你設定的按鍵會先打開它。再次觸發才會拋竿。背包中的其他容器不會被打開。",
+    CONTAINER_OPENED = "正在打開：%s – 再次觸發即可拋竿。",
+})
+
 -- Englisch als Basis, danach die Sprache des Clients darüberlegen
 for key, value in pairs(translations.enUS) do
     L[key] = value

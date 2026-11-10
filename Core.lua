@@ -43,6 +43,8 @@ ns.defaults = {
     weaponRestoreDelay = 30,
     -- Classic-Clients: ohne aktiven Köder vor dem Auswerfen den besten Köder anbringen
     autoLure = true,
+    -- Geangelte Muscheln und Kisten vor dem Auswerfen öffnen
+    autoOpen = true,
     -- Classic-Clients: Angel-Infos zum Gebiet auf der Weltkarte anzeigen
     showMapInfo = true,
     -- Classic-Clients: Angellehrer, Expertenbuch und Fachmann-Quest auf der Karte markieren
@@ -568,6 +570,111 @@ local function ScheduleWeaponRestore()
     end)
 end
 
+---------------------------------------------------------------------------
+-- Geangelte Behälter (Muscheln, Kisten) vor dem Auswerfen öffnen
+---------------------------------------------------------------------------
+-- Es gibt keine Item-Liste: Das Spiel meldet öffenbare Behälter über "hasLoot".
+-- Geöffnet wird nur, was der Spieler selbst schon einmal geangelt hat, damit
+-- andere Behälter in den Taschen (Belohnungskisten, Geschenke …) unberührt bleiben.
+local OPEN_PENDING_TIME = 2   -- so lange gilt ein Öffnen als "läuft noch"
+local OPEN_BAGS_FULL_PAUSE = 60 -- Taschen voll: später erneut versuchen
+local fishedItems = {}        -- in dieser Sitzung geangelte Item-IDs
+-- [itemID] = Zeitpunkt, ab dem wieder versucht wird. Verschlossene Behälter
+-- (Schlossknacken nötig) bekommen math.huge: bis zum nächsten Login/Reload nie.
+local openSkippedUntil = {}
+local openAttempts = {}       -- [Taschenplatz] = { id, count, start, time, looting }
+local bagsFullAt = 0          -- letzte Meldung "Inventar ist voll"
+
+-- Beutefenster eines gerade geöffneten Behälters ging auf bzw. zu
+local function MarkOpenAttemptsLooting(looting)
+    local now = GetTime()
+    for _, attempt in pairs(openAttempts) do
+        if looting then
+            if now - attempt.time < OPEN_PENDING_TIME then
+                attempt.looting = true
+            end
+        elseif attempt.looting then
+            -- Fenster zu: den Taschen kurz Zeit geben, sich zu aktualisieren
+            attempt.looting = false
+            attempt.time = now
+        end
+    end
+end
+
+-- Beim Öffnen des Beutefensters aufrufen: Angelbeute merken
+local function RememberFishedLoot()
+    if not (IsFishingLoot and IsFishingLoot()) then return end
+    if not (GetNumLootItems and GetLootSlotLink) then return end
+    for index = 1, GetNumLootItems() do
+        local link = GetLootSlotLink(index)
+        local itemID = link and tonumber(link:match("item:(%d+)"))
+        if itemID then
+            fishedItems[itemID] = true
+        end
+    end
+end
+
+-- Nach Taschenänderungen aufrufen: Versuche vergessen, deren Platz sich geändert hat.
+-- Sonst gälte ein später im selben Platz gelandeter Behälter als "nicht öffenbar".
+local function PruneOpenAttempts()
+    local container = C_Container
+    if not (container and container.GetContainerItemInfo) then return end
+    for key, attempt in pairs(openAttempts) do
+        local info = container.GetContainerItemInfo(math.floor(key / 1000), key % 1000)
+        if not info or info.itemID ~= attempt.id or (info.stackCount or 1) ~= attempt.count then
+            openAttempts[key] = nil
+        end
+    end
+end
+
+-- Liefert Tasche, Platz und Item-ID des nächsten geangelten Behälters
+local function GetContainerToOpen()
+    local container = C_Container
+    if not (container and container.GetContainerNumSlots and container.GetContainerItemInfo) then
+        return nil
+    end
+    local known = EZFishingDB.fishedContainers
+    if not known and next(fishedItems) == nil then return nil end
+    local now = GetTime()
+    for bag = 0, NUM_BAG_SLOTS or 4 do
+        for slot = 1, container.GetContainerNumSlots(bag) do
+            local info = container.GetContainerItemInfo(bag, slot)
+            local itemID = info and info.hasLoot and not info.isLocked and info.itemID
+            if itemID and (fishedItems[itemID] or (known and known[itemID]))
+                and now >= (openSkippedUntil[itemID] or 0) then
+                -- Dauerhaft merken, damit auch Reste aus früheren Sitzungen geöffnet werden
+                if not (known and known[itemID]) then
+                    known = known or {}
+                    EZFishingDB.fishedContainers = known
+                    known[itemID] = true
+                end
+                local key = bag * 1000 + slot
+                local count = info.stackCount or 1
+                local attempt = openAttempts[key]
+                if attempt and attempt.id == itemID and attempt.count == count then
+                    -- Schon versucht und der Stapel ist unverändert
+                    if not attempt.looting and now - attempt.time >= OPEN_PENDING_TIME then
+                        openAttempts[key] = nil
+                        if bagsFullAt >= attempt.start then
+                            -- Taschen waren voll: nach einer Pause erneut versuchen
+                            openSkippedUntil[itemID] = now + OPEN_BAGS_FULL_PAUSE
+                            Debug("Taschen voll, Behälter später erneut: item:" .. itemID)
+                        else
+                            -- Verschlossen o. Ä.: in dieser Sitzung nicht mehr anfassen
+                            openSkippedUntil[itemID] = math.huge
+                            Debug("Behälter nicht öffenbar, wird ignoriert: item:" .. itemID)
+                        end
+                    end
+                    -- sonst: wird gerade geöffnet, diesen Platz vorerst überspringen
+                else
+                    openAttempts[key] = { id = itemID, count = count, start = now, time = now }
+                    return bag, slot, itemID
+                end
+            end
+        end
+    end
+end
+
 -- Vor jedem Auslösen erneut prüfen; bei Verbot wird der Klick wirkungslos.
 -- Die Maus-Prüfungen hat der Doppelklick schon beim Drücken erledigt.
 castButton:SetScript("PreClick", function(self, _, down)
@@ -618,6 +725,17 @@ castButton:SetScript("PreClick", function(self, _, down)
         local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(lureID)
         Print(L.LURE_APPLIED:format(name or ("item:" .. lureID)))
         return
+    end
+    if EZFishingDB.autoOpen then
+        local bag, slot, containerID = GetContainerToOpen()
+        if bag then
+            -- Behälter öffnen; die nächste Auslösung wirft dann aus
+            self:SetAttribute("type", "macro")
+            self:SetAttribute("macrotext", ("/use %d %d"):format(bag, slot))
+            local name = C_Item and C_Item.GetItemNameByID and C_Item.GetItemNameByID(containerID)
+            Print(L.CONTAINER_OPENED:format(name or ("item:" .. containerID)))
+            return
+        end
     end
     self:SetAttribute("type", "spell")
 end)
@@ -715,6 +833,10 @@ eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 eventFrame:RegisterEvent("UI_ERROR_MESSAGE")
 eventFrame:RegisterEvent("SPELLS_CHANGED")
+eventFrame:RegisterEvent("LOOT_READY")
+eventFrame:RegisterEvent("LOOT_OPENED")
+eventFrame:RegisterEvent("LOOT_CLOSED")
+eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
 eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
@@ -747,6 +869,14 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     elseif event == "SPELLS_CHANGED" then
         -- Neuer Angel-Rang gelernt (Classic) oder Zauberbuch erst jetzt geladen
         ResolveFishingSpell()
+    elseif event == "LOOT_READY" or event == "LOOT_OPENED" then
+        -- Angelbeute merken, damit geangelte Behälter geöffnet werden können
+        RememberFishedLoot()
+        MarkOpenAttemptsLooting(true)
+    elseif event == "LOOT_CLOSED" then
+        MarkOpenAttemptsLooting(false)
+    elseif event == "BAG_UPDATE_DELAYED" then
+        PruneOpenAttempts()
     elseif event == "PLAYER_LOGIN" then
         ResolveFishingSpell()
         UpdateSoftInteractCVars()
@@ -836,6 +966,9 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         local message = ...
         if type(message) ~= "string" then return end
         Debug(("Fehlermeldung [%s]: %s"):format(tostring(arg1), message))
+        if ERR_INV_FULL and message == ERR_INV_FULL then
+            bagsFullAt = GetTime()
+        end
         if SPELL_FAILED_NOT_FISHABLE and message == SPELL_FAILED_NOT_FISHABLE then
             lastClickTime = 0
             lockedUntil = GetTime() + EZFishingDB.noWaterLock

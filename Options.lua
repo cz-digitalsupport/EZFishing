@@ -223,6 +223,7 @@ function ns.InitOptions()
     if not ns.IS_RETAIL then
         AddCheckbox("autoLure", L.OPT_AUTO_LURE, L.OPT_AUTO_LURE_DESC)
     end
+    AddCheckbox("autoOpen", L.OPT_AUTO_OPEN, L.OPT_AUTO_OPEN_DESC)
     AddCheckbox("forceSound", L.OPT_SOUND, L.OPT_SOUND_DESC)
     AddSlider("noWaterLock", L.OPT_LOCK, L.OPT_LOCK_DESC, LOCK_MIN, LOCK_MAX, LOCK_STEP, L.SECONDS)
     AddCheckbox("showMinimapButton", L.OPT_MINIMAP, L.OPT_MINIMAP_DESC)

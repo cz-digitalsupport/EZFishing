@@ -28,6 +28,8 @@ Choose a custom key instead. The first press casts, the second press reels in th
 
 <h3 style="color:#1e88b4">🔊 Optional extras</h3>
 
+📦 Opens what you fish up: a clam, crate or trunk you fished is opened by the double right-click or your key before the next cast. Other containers in your bags are left alone.
+
 🔔 Force fishing sounds: effects at full volume, music, ambience and dialog muted, your sound settings restored afterwards.
 
 ⏱️ Adjustable lock time after a cast without water.
@@ -81,6 +83,8 @@ Es löst nicht aus, wenn du auf NPCs, Spieler, Truhen, Kräuter, Briefkästen od
 Wähle stattdessen eine eigene Taste. Der erste Druck wirft aus, der zweite holt den Schwimmer ein. Auf Wunsch sitzt dich die Auslösung außerdem ab, sodass du mit einem Tastendruck vom Reittier ans Wasser kommst.
 
 <h3 style="color:#1e88b4">🔊 Optionale Extras</h3>
+
+📦 Öffnet, was du angelst: Eine geangelte Muschel, Kiste oder Truhe öffnet der Doppel-Rechtsklick bzw. deine Taste vor dem nächsten Wurf. Andere Behälter in deinen Taschen bleiben unberührt.
 
 🔔 Angelgeräusche erzwingen: Effekte in voller Lautstärke, Musik, Umgebung und Dialoge stumm, danach werden deine Toneinstellungen wiederhergestellt.
 
@@ -136,6 +140,8 @@ Choisissez une touche personnalisée. Le premier appui lance la ligne, le second
 
 <h3 style="color:#1e88b4">🔊 Options supplémentaires</h3>
 
+📦 Ouvre ce que vous pêchez : une palourde, une caisse ou une malle pêchée est ouverte par le double clic droit ou votre touche avant le lancer suivant. Les autres conteneurs de vos sacs ne sont pas touchés.
+
 🔔 Forcer les sons de pêche : effets sonores à plein volume, musique, ambiance et dialogues coupés, vos réglages sonores rétablis ensuite.
 
 ⏱️ Durée de blocage réglable après un lancer hors de l'eau.
@@ -189,6 +195,8 @@ No se activa cuando haces clic derecho sobre PNJ, jugadores, cofres, hierbas, bu
 Elige una tecla personalizada. La primera pulsación lanza la caña y la segunda recoge el corcho. La activación también puede desmontarte, así que con una sola pulsación pasas de la montura al agua.
 
 <h3 style="color:#1e88b4">🔊 Extras opcionales</h3>
+
+📦 Abre lo que pescas: una almeja, una caja o un baúl que has pescado se abre con el doble clic derecho o tu tecla antes del siguiente lanzamiento. Los demás contenedores de tus bolsas no se tocan.
 
 🔔 Forzar los sonidos de pesca: efectos al máximo volumen, música, ambiente y diálogos silenciados, y después se restauran tus ajustes de sonido.
 
@@ -244,6 +252,8 @@ Scegli un tasto personalizzato. La prima pressione lancia la canna, la seconda r
 
 <h3 style="color:#1e88b4">🔊 Extra opzionali</h3>
 
+📦 Apre ciò che peschi: una vongola, una cassa o un baule che hai pescato viene aperto dal doppio clic destro o dal tuo tasto prima del lancio successivo. Gli altri contenitori nelle borse non vengono toccati.
+
 🔔 Forza i suoni di pesca: effetti al massimo volume, musica, ambiente e dialoghi disattivati, poi le tue impostazioni audio vengono ripristinate.
 
 ⏱️ Tempo di blocco regolabile dopo un lancio senza acqua.
@@ -297,6 +307,8 @@ Ele não é acionado quando você clica com o botão direito em NPCs, jogadores,
 Escolha uma tecla personalizada. O primeiro toque lança a vara e o segundo recolhe a boia. O acionamento também pode desmontar você, e assim um único toque leva você da montaria até a água.
 
 <h3 style="color:#1e88b4">🔊 Extras opcionais</h3>
+
+📦 Abre o que você pesca: um marisco, uma caixa ou um baú que você pescou é aberto pelo clique duplo direito ou pela sua tecla antes do próximo lançamento. Os outros recipientes das bolsas não são tocados.
 
 🔔 Forçar sons de pesca: efeitos no volume máximo, música, ambiente e diálogos silenciados, e depois suas configurações de som são restauradas.
 
@@ -352,6 +364,8 @@ EZFishing работает в WoW Forever так же, как в Retail, и ав
 
 <h3 style="color:#1e88b4">🔊 Дополнительно</h3>
 
+📦 Открывает улов: выловленного моллюска, ящик или сундук двойной щелчок ПКМ или ваша клавиша открывает перед следующим забросом. Остальные контейнеры в сумках аддон не трогает.
+
 🔔 Принудительные звуки рыбалки: эффекты на полной громкости, музыка, окружение и диалоги отключены, затем ваши настройки звука восстанавливаются.
 
 ⏱️ Настраиваемое время блокировки после заброса мимо воды.
@@ -405,6 +419,8 @@ NPC, 플레이어, 보물 상자, 약초, 우편함, 퀘스트 오브젝트를 �
 사용자 지정 키를 선택하세요. 처음 누르면 낚싯대를 던지고, 다시 누르면 찌를 건집니다. 실행 시 탈것에서 내리게 할 수도 있어서, 한 번의 입력으로 탈것에서 물가로 바로 넘어갈 수 있습니다.
 
 <h3 style="color:#1e88b4">🔊 선택 기능</h3>
+
+📦 낚은 것을 열어 줍니다: 직접 낚은 조개, 상자, 궤짝은 다음에 낚싯대를 던지기 전에 오른쪽 더블 클릭 또는 지정한 키로 열립니다. 가방의 다른 상자는 건드리지 않습니다.
 
 🔔 낚시 소리 강제 활성화: 효과음은 최대 음량, 음악, 환경음, 대화는 음소거되며 이후 원래 소리 설정으로 복원됩니다.
 
@@ -460,6 +476,8 @@ EZFishing 在 WoW Forever 和正式服上都能运行，并会自动识别所有
 
 <h3 style="color:#1e88b4">🔊 可选功能</h3>
 
+📦 打开你钓到的东西：钓到的蚌壳、箱子或宝箱会在下一次抛竿前由右键双击或你设置的按键打开。背包中的其他容器不会被打开。
+
 🔔 强制开启钓鱼音效：音效以最大音量播放，音乐、环境音和对话静音，结束后恢复你原来的声音设置。
 
 ⏱️ 可调节的无水抛竿锁定时间。
@@ -513,6 +531,8 @@ EZFishing 在 WoW Forever 和正式服上都能運作，並會自動辨識所有
 可以改用自訂按鍵：第一次按下拋竿，第二次按下收回浮標。觸發操作也可以在騎乘時先讓你下坐騎，一次按鍵就能從坐騎直接走到水邊。
 
 <h3 style="color:#1e88b4">🔊 可選功能</h3>
+
+📦 打開你釣到的東西：釣到的蚌殼、箱子或寶箱會在下一次拋竿前由右鍵雙擊或你設定的按鍵打開。背包中的其他容器不會被打開。
 
 🔔 強制開啟釣魚音效：音效以最大音量播放，音樂、環境音與對話靜音，結束後恢復你原本的聲音設定。
 
