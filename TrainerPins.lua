@@ -47,6 +47,20 @@ local function GetCanvasScale()
     return 1
 end
 
+-- Blizzards Karten-Pins (auch die Erkundungs-Überlagerung) liegen ab Frame-Level
+-- 2000 auf der Canvas. Ein fester Abstand zur Canvas reicht deshalb nicht: in
+-- erkundeten Gebieten würden die aufgedeckten Kartenteile die Pins verdecken.
+local function GetPinFrameLevel(canvas)
+    local manager = WorldMapFrame.GetPinFrameLevelsManager and WorldMapFrame:GetPinFrameLevelsManager()
+    if manager and manager.GetValidFrameLevel then
+        local ok, level = pcall(manager.GetValidFrameLevel, manager, "PIN_FRAME_LEVEL_TOPMOST")
+        if ok and level then
+            return level + 1
+        end
+    end
+    return canvas:GetFrameLevel() + 2500
+end
+
 local function PlayerFaction()
     return UnitFactionGroup("player")
 end
@@ -221,11 +235,21 @@ local function RepositionPins()
 end
 
 function ns.UpdateTrainerPins(mapID)
-    if not ns.FISHING_TRAINERS or not WorldMapFrame then return end
+    local debug = EZFishingDB.debug
+    if not ns.FISHING_TRAINERS or not WorldMapFrame then
+        if debug then ns.Print("|cff999999Lehrer-Pins: keine Daten oder keine Weltkarte|r") end
+        return
+    end
     HideAll()
-    if not EZFishingDB.showTrainers or not mapID then return end
+    if not EZFishingDB.showTrainers or not mapID then
+        if debug and mapID then ns.Print("|cff999999Lehrer-Pins: Option ist ausgeschaltet|r") end
+        return
+    end
     local list = ns.FISHING_TRAINERS[mapID]
-    if not list then return end
+    if not list then
+        if debug then ns.Print("|cff999999Lehrer-Pins: keine Lehrer auf dieser Karte|r") end
+        return
+    end
 
     -- Zoomen und Vollbild/Fenster: Größe und Position der Pins nachziehen
     if not hooked then
@@ -237,14 +261,14 @@ function ns.UpdateTrainerPins(mapID)
         hooked = true
     end
 
-    local canvas = GetCanvas()
+    local frameLevel = GetPinFrameLevel(GetCanvas())
     local index = 0
     for _, npc in ipairs(list) do
         if IsVisibleForPlayer(npc) then
             index = index + 1
             local pin = GetPin(index)
             pin.npc = npc
-            pin:SetFrameLevel(canvas:GetFrameLevel() + 900)
+            pin:SetFrameLevel(frameLevel)
             pin.ring:SetVertexColor(unpack(KIND_RING[npc.kind]))
             pin.icon:SetTexture(KIND_ICONS[npc.kind])
             if npc.kind == "quest" then
@@ -256,6 +280,10 @@ function ns.UpdateTrainerPins(mapID)
             PlacePin(pin)
             RequestItems(npc)
         end
+    end
+    if EZFishingDB.debug then
+        ns.Print(("|cff999999Lehrer-Pins: %d von %d (Fraktion %s, Ebene %d, Canvas %d)|r"):format(
+            index, #list, tostring(PlayerFaction()), frameLevel, GetCanvas():GetFrameLevel()))
     end
 end
 
