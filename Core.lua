@@ -570,6 +570,67 @@ local function ScheduleWeaponRestore()
     end)
 end
 
+-- Angegriffen mit angelegter Angel: Waffen sofort zurück. Im Kampf selbst blockt
+-- das Spiel Waffenwechsel durch Addons; PLAYER_REGEN_DISABLED feuert aber kurz
+-- vor dem Combat-Lockdown. Ob der Tausch in diesem Moment noch durchgeht, zeigt
+-- sich erst nach dem Kampf (FinishCombatWeaponRestore).
+local combatRestoreTried = false
+-- Wartezeiten bis zum nächsten Versuch: z. B. während das Angeln noch ausläuft
+-- oder die Haupthand noch gewechselt wird
+local COMBAT_RETRY_DELAYS = { 0.3, 1, 2.5 }
+
+local function TryCombatWeaponSwap(saved, attempt)
+    if not combatRestoreTried then return end
+    if IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then
+        equipItem(saved.main or saved.off, saved.main and MAINHAND_SLOT or OFFHAND_SLOT)
+    elseif saved.off and GetInventoryItemLink("player", OFFHAND_SLOT) ~= saved.off then
+        -- Haupthand sitzt, die Nebenhand kann erst nach der Zweihand-Angel
+        equipItem(saved.off, OFFHAND_SLOT)
+    else
+        Debug(("Kampf: Waffen angelegt (nach %d Versuchen)"):format(attempt - 1))
+        return
+    end
+    Debug(("Kampf: Waffentausch Versuch %d (Lockdown: %s, Zauber: %s)"):format(attempt,
+        tostring(InCombatLockdown()), tostring(UnitChannelInfo("player") or UnitCastingInfo("player"))))
+    local delay = COMBAT_RETRY_DELAYS[attempt]
+    if delay then
+        C_Timer.After(delay, function() TryCombatWeaponSwap(saved, attempt + 1) end)
+    end
+end
+
+local function RestoreWeaponsOnCombat()
+    local saved = GetSavedWeapons()
+    if not saved then
+        Debug("Kampfbeginn: keine gemerkten Waffen")
+        return
+    end
+    if not equipItem or (EZFishingDB.weaponRestoreDelay or 0) <= 0 then return end
+    if not IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then return end
+    CancelWeaponRestore()
+    combatRestoreTried = true
+    TryCombatWeaponSwap(saved, 1)
+end
+
+-- Nach dem Kampf: Ergebnis prüfen und Fehlendes nachholen
+local function FinishCombatWeaponRestore()
+    combatRestoreTried = false
+    local saved = GetSavedWeapons()
+    if not saved then return end
+    if IsFishingPole(GetInventoryItemID("player", MAINHAND_SLOT)) then
+        -- Der Tausch bei Kampfbeginn hat nicht gegriffen: wie bisher nach dem Kampf
+        Debug("Waffentausch bei Kampfbeginn hat nicht gegriffen")
+        RestoreWeapons()
+        return
+    end
+    Debug("Waffentausch bei Kampfbeginn erfolgreich")
+    ClearSavedWeapons()
+    -- Die Nebenhand kann beim ersten Versuch noch an der Zweihand-Angel gescheitert sein
+    if saved.off and GetInventoryItemLink("player", OFFHAND_SLOT) ~= saved.off then
+        equipItem(saved.off, OFFHAND_SLOT)
+    end
+    Print(L.WEAPONS_RESTORED)
+end
+
 ---------------------------------------------------------------------------
 -- Geangelte Behälter (Muscheln, Kisten) vor dem Auswerfen öffnen
 ---------------------------------------------------------------------------
@@ -832,6 +893,7 @@ eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 eventFrame:RegisterEvent("UI_ERROR_MESSAGE")
+eventFrame:RegisterEvent("ADDON_ACTION_BLOCKED")
 eventFrame:RegisterEvent("SPELLS_CHANGED")
 eventFrame:RegisterEvent("LOOT_READY")
 eventFrame:RegisterEvent("LOOT_OPENED")
@@ -947,6 +1009,7 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         ClearReelBinding()
         ClearOverrideBindings(keyFrame)
         pendingKeyUpdate = true
+        RestoreWeaponsOnCombat()
     elseif event == "PLAYER_REGEN_ENABLED" then
         -- Was im Kampf nicht möglich war, jetzt nachholen
         ResolveFishingSpell()
@@ -958,8 +1021,15 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         if pendingKeyUpdate then
             UpdateKeyBinding()
         end
-        if pendingWeaponRestore then
+        if combatRestoreTried then
+            FinishCombatWeaponRestore()
+        elseif pendingWeaponRestore then
             RestoreWeapons()
+        end
+    elseif event == "ADDON_ACTION_BLOCKED" then
+        -- arg1 = Addon, erstes Vararg = blockierte Funktion
+        if arg1 == ADDON_NAME then
+            Debug("Vom Spiel blockiert: " .. tostring((...)))
         end
     elseif event == "UI_ERROR_MESSAGE" then
         -- arg1 = Fehlertyp, erstes Vararg = lokalisierter Fehlertext
