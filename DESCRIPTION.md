@@ -26,6 +26,8 @@ It does not trigger when you right-click NPCs, players, chests, herbs, mailboxes
 
 Choose a custom key instead. The first press casts, the second press reels in the bobber. The trigger can also dismount you, so a single press takes you from your mount to the water.
 
+🎮 Playing with a controller? Set any gamepad button as your custom key, combinations with your shoulder modifiers included. The setup assistant picks the custom key for you when a controller is active.
+
 <h3 style="color:#1e88b4">🔊 Optional extras</h3>
 
 📦 Opens what you fish up: a clam, crate or trunk you fished is opened by the double right-click or your key before the next cast. Other containers in your bags are left alone.
@@ -81,6 +83,8 @@ Es löst nicht aus, wenn du auf NPCs, Spieler, Truhen, Kräuter, Briefkästen od
 <h3 style="color:#1e88b4">⌨️ Lieber mit Tastatur?</h3>
 
 Wähle stattdessen eine eigene Taste. Der erste Druck wirft aus, der zweite holt den Schwimmer ein. Auf Wunsch sitzt dich die Auslösung außerdem ab, sodass du mit einem Tastendruck vom Reittier ans Wasser kommst.
+
+🎮 Spielst du mit Controller? Lege eine beliebige Gamepad-Taste als eigene Taste fest, auch zusammen mit deinen Schultertasten-Modifikatoren. Ist ein Controller aktiv, wählt der Einrichtungsassistent die eigene Taste gleich vor.
 
 <h3 style="color:#1e88b4">🔊 Optionale Extras</h3>
 
@@ -138,6 +142,8 @@ Il ne se déclenche pas quand vous cliquez droit sur des PNJ, des joueurs, des c
 
 Choisissez une touche personnalisée. Le premier appui lance la ligne, le second ramène le bouchon. Le déclencheur peut aussi vous faire descendre de monture, pour passer de votre monture à l'eau en une seule action.
 
+🎮 Vous jouez à la manette ? Choisissez n'importe quel bouton comme touche personnalisée, y compris avec vos modificateurs de gâchette. Si une manette est active, l'assistant de configuration présélectionne la touche personnalisée.
+
 <h3 style="color:#1e88b4">🔊 Options supplémentaires</h3>
 
 📦 Ouvre ce que vous pêchez : une palourde, une caisse ou une malle pêchée est ouverte par le double clic droit ou votre touche avant le lancer suivant. Les autres conteneurs de vos sacs ne sont pas touchés.
@@ -193,6 +199,8 @@ No se activa cuando haces clic derecho sobre PNJ, jugadores, cofres, hierbas, bu
 <h3 style="color:#1e88b4">⌨️ ¿Prefieres el teclado?</h3>
 
 Elige una tecla personalizada. La primera pulsación lanza la caña y la segunda recoge el corcho. La activación también puede desmontarte, así que con una sola pulsación pasas de la montura al agua.
+
+🎮 ¿Juegas con mando? Asigna cualquier botón del mando como tecla personalizada, también combinado con tus modificadores de gatillo. Si hay un mando activo, el asistente de configuración preselecciona la tecla personalizada.
 
 <h3 style="color:#1e88b4">🔊 Extras opcionales</h3>
 
@@ -250,6 +258,8 @@ Non scatta quando fai clic destro su PNG, giocatori, forzieri, erbe, cassette po
 
 Scegli un tasto personalizzato. La prima pressione lancia la canna, la seconda recupera il galleggiante. L'attivazione può anche farti scendere dalla cavalcatura, così con una sola pressione passi dalla cavalcatura all'acqua.
 
+🎮 Giochi con il controller? Imposta qualsiasi pulsante come tasto personalizzato, anche in combinazione con i modificatori dei dorsali. Se è attivo un controller, l'assistente di configurazione preseleziona il tasto personalizzato.
+
 <h3 style="color:#1e88b4">🔊 Extra opzionali</h3>
 
 📦 Apre ciò che peschi: una vongola, una cassa o un baule che hai pescato viene aperto dal doppio clic destro o dal tuo tasto prima del lancio successivo. Gli altri contenitori nelle borse non vengono toccati.
@@ -305,6 +315,8 @@ Ele não é acionado quando você clica com o botão direito em NPCs, jogadores,
 <h3 style="color:#1e88b4">⌨️ Prefere o teclado?</h3>
 
 Escolha uma tecla personalizada. O primeiro toque lança a vara e o segundo recolhe a boia. O acionamento também pode desmontar você, e assim um único toque leva você da montaria até a água.
+
+🎮 Joga com controle? Defina qualquer botão do controle como tecla personalizada, inclusive combinado com seus modificadores de gatilho. Com um controle ativo, o assistente de configuração já pré-seleciona a tecla personalizada.
 
 <h3 style="color:#1e88b4">🔊 Extras opcionais</h3>
 
@@ -362,6 +374,8 @@ EZFishing работает в WoW Forever так же, как в Retail, и ав
 
 Выберите свою клавишу. Первое нажатие забрасывает удочку, второе подсекает поплавок. По нажатию аддон также может спешить вас, и одним действием вы переходите от скакуна к воде.
 
+🎮 Играете с геймпадом? Назначьте своей клавишей любую кнопку геймпада, в том числе в сочетании с модификаторами на шифтах. Если геймпад активен, мастер настройки сразу выберет свою клавишу.
+
 <h3 style="color:#1e88b4">🔊 Дополнительно</h3>
 
 📦 Открывает улов: выловленного моллюска, ящик или сундук двойной щелчок ПКМ или ваша клавиша открывает перед следующим забросом. Остальные контейнеры в сумках аддон не трогает.
@@ -417,6 +431,8 @@ NPC, 플레이어, 보물 상자, 약초, 우편함, 퀘스트 오브젝트를 �
 <h3 style="color:#1e88b4">⌨️ 키보드가 더 편하다면</h3>
 
 사용자 지정 키를 선택하세요. 처음 누르면 낚싯대를 던지고, 다시 누르면 찌를 건집니다. 실행 시 탈것에서 내리게 할 수도 있어서, 한 번의 입력으로 탈것에서 물가로 바로 넘어갈 수 있습니다.
+
+🎮 게임패드로 플레이하나요? 원하는 게임패드 버튼을 사용자 지정 키로 설정할 수 있으며, 숄더 버튼 수정자와의 조합도 가능합니다. 게임패드가 활성화되어 있으면 설정 도우미가 사용자 지정 키를 미리 선택합니다.
 
 <h3 style="color:#1e88b4">🔊 선택 기능</h3>
 
@@ -474,6 +490,8 @@ EZFishing 在 WoW Forever 和正式服上都能运行，并会自动识别所有
 
 可以改用自定义按键：第一次按下抛竿，第二次按下收回鱼漂。触发操作还可以在骑乘时先让你下坐骑，一次按键就能从坐骑直接走到水边。
 
+🎮 使用手柄？可将任意手柄按键设为自定义按键，也支持与肩键修饰键组合。手柄启用时，设置向导会自动预选自定义按键。
+
 <h3 style="color:#1e88b4">🔊 可选功能</h3>
 
 📦 打开你钓到的东西：钓到的蚌壳、箱子或宝箱会在下一次抛竿前由右键双击或你设置的按键打开。背包中的其他容器不会被打开。
@@ -529,6 +547,8 @@ EZFishing 在 WoW Forever 和正式服上都能運作，並會自動辨識所有
 <h3 style="color:#1e88b4">⌨️ 比較喜歡鍵盤？</h3>
 
 可以改用自訂按鍵：第一次按下拋竿，第二次按下收回浮標。觸發操作也可以在騎乘時先讓你下坐騎，一次按鍵就能從坐騎直接走到水邊。
+
+🎮 使用手把？可將任意手把按鍵設為自訂按鍵，也支援與肩鍵修飾鍵組合。手把啟用時，設定精靈會自動預選自訂按鍵。
 
 <h3 style="color:#1e88b4">🔊 可選功能</h3>
 

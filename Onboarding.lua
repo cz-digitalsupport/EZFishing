@@ -25,14 +25,17 @@ local function YesNo(yesDesc, noDesc, recommendYes)
 end
 
 local function BuildSteps()
+    local gamePad = ns.IsGamePadActive()
     local list = {
         { title = L.ONB_WELCOME_TITLE, text = L.ONB_WELCOME_TEXT },
         {
             key = "triggerMode", title = L.ONB_TRIGGER_TITLE, text = L.ONB_TRIGGER_TEXT,
             options = {
+                -- Mit Controller gibt es keinen Rechtsklick: dann die eigene Taste empfehlen
                 { value = ns.TRIGGER_DOUBLECLICK, label = L.TRIGGER_DOUBLECLICK,
-                  desc = L.ONB_TRIGGER_DC_DESC, recommended = true },
-                { value = ns.TRIGGER_KEY, label = L.TRIGGER_KEY, desc = L.ONB_TRIGGER_KEY_DESC },
+                  desc = L.ONB_TRIGGER_DC_DESC, recommended = not gamePad },
+                { value = ns.TRIGGER_KEY, label = L.TRIGGER_KEY, desc = L.ONB_TRIGGER_KEY_DESC,
+                  recommended = gamePad },
             },
             keyCapture = true,
         },
@@ -316,6 +319,10 @@ function ns.ShowOnboarding()
     wipe(choices)
     for key in pairs(ns.defaults) do
         choices[key] = EZFishingDB[key]
+    end
+    -- Erster Start mit Controller: eigene Taste vorauswählen
+    if not EZFishingDB.onboarded and ns.IsGamePadActive() then
+        choices.triggerMode = ns.TRIGGER_KEY
     end
     steps = BuildSteps()
     visibleSteps = nil

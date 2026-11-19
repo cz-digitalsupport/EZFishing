@@ -55,6 +55,8 @@ local function UpdateCaptureText()
 end
 
 local function AcceptKey(key)
+    -- Gamepad-Tasten können je nach Client zusätzlich als Tastendruck ankommen
+    if not captureFrame:IsShown() then return end
     ns.SetActionKey(key)
     captureFrame:Hide()
 end
@@ -105,7 +107,7 @@ local function CreateCaptureFrame()
     f:SetScript("OnKeyDown", function(self, key)
         if key == "ESCAPE" then
             self:Hide()
-        elseif not MODIFIER_KEYS[key] then
+        elseif not MODIFIER_KEYS[key] and not ns.IsGamePadModifier(key) then
             AcceptKey(BuildKeyString(key))
         end
     end)
@@ -113,6 +115,19 @@ local function CreateCaptureFrame()
         local key = MOUSE_KEYS[button]
         if key then AcceptKey(BuildKeyString(key)) end
     end)
+    -- Gamepad-Tasten (z. B. "PAD1", "PADRSHOULDER"); Modifikatoren emuliert das
+    -- Spiel über IsShiftKeyDown & Co., daher passt BuildKeyString auch hier
+    if f.EnableGamePadButton then
+        f:EnableGamePadButton(true)
+        if f.SetPropagateGamePadInput then
+            f:SetPropagateGamePadInput(false)
+        end
+        f:SetScript("OnGamePadButtonDown", function(self, button)
+            if not ns.IsGamePadModifier(button) then
+                AcceptKey(BuildKeyString(button))
+            end
+        end)
+    end
     f:SetScript("OnShow", UpdateCaptureText)
 
     return f

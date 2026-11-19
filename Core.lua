@@ -65,6 +65,22 @@ ns.IS_RETAIL = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 ns.TRIGGER_DOUBLECLICK = 1
 ns.TRIGGER_KEY = 2
 
+-- Gamepad-Unterstützung des Spiels aktiv (Retail und Classic-Clients ab 1.14)
+function ns.IsGamePadActive()
+    if C_GamePad and C_GamePad.IsEnabled then
+        return C_GamePad.IsEnabled() and true or false
+    end
+    return false
+end
+
+-- Gamepad-Tasten, die das Spiel als Umschalt/Strg/Alt nutzt: allein keine Auslösung
+function ns.IsGamePadModifier(button)
+    for _, cvar in ipairs({ "GamePadEmulateShift", "GamePadEmulateCtrl", "GamePadEmulateAlt" }) do
+        if GetCVar(cvar) == button then return true end
+    end
+    return false
+end
+
 -- Während des Angelns: Effekte laut, Musik/Umgebung/Dialoge stumm
 local FISHING_SOUND_CVARS = {
     Sound_EnableAllSound = "1",
